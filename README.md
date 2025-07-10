@@ -123,7 +123,15 @@ A Rails application demonstrating organization-based and age-based access contro
 
 ### Running Tests
 ```bash
-rails test
+# Run all RSpec tests
+bundle exec rspec
+
+# Run specific test files
+bundle exec rspec spec/models/user_spec.rb
+bundle exec rspec spec/services/participation_service_spec.rb
+
+# Run tests with documentation
+bundle exec rspec --format documentation
 ```
 
 ### Code Quality
@@ -135,6 +143,15 @@ bundle exec rubocop
 ```bash
 rails db:reset
 ```
+
+### Test Coverage
+The test suite includes:
+- Model validations and associations
+- Business logic (age calculations, consent workflows)
+- Service layer functionality
+- Edge cases and error conditions
+
+See `spec/README.md` for detailed testing documentation.
 
 ## License
 

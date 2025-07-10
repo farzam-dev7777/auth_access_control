@@ -21,34 +21,19 @@ class ParticipationService
 
   def check_age_restrictions
     return true unless @user.minor?
-
-    # Check organization age settings
     return false if @organization.min_age && @user.age < @organization.min_age
     return false if @organization.max_age && @user.age > @organization.max_age
-
-    # Check if organization allows minors
     return false unless @organization.allow_minors
-
-    # Check parental consent requirements
-    if @organization.requires_parental_consent && @user.requires_parental_consent?
-      return false unless @user.has_valid_parental_consent?
-    end
-
-    true
   end
 
   def get_accessible_content(content_type = nil)
     return [] unless @user.memberships.exists?(organization: @organization)
 
-    # Apply age-based filtering
     if @user.minor?
       # Filter content based on age appropriateness
-      # This would integrate with your content model
       return []
     end
-
     # Return all content for adults
-    []
   end
 
   def log_activity(action, metadata = {})

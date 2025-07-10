@@ -1,0 +1,26 @@
+:concurrency: 5
+:queues:
+  - default
+  - mailers
+  - active_storage
+  - cleanup
+
+:max_retries: 3
+:retry_interval: 60
+
+# Development settings
+:development:
+  :concurrency: 2
+  :queues:
+    - default
+    - mailers
+    - cleanup
+
+# Production settings
+:production:
+  :concurrency: 10
+  :queues:
+    - default
+    - mailers
+    - active_storage
+    - cleanup

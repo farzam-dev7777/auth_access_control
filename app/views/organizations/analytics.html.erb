@@ -1,0 +1,50 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Organization Analytics</h1>
+    <p class="text-gray-600 mt-2">Analytics and engagement metrics for <strong><%= @organization.name %></strong>.</p>
+  </div>
+
+
+
+  <!-- Recent Activities -->
+  <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+    <h2 class="text-xl font-semibold text-gray-900 mb-4">Recent Activities</h2>
+    <% if @recent_activities.any? %>
+      <div class="space-y-4">
+        <% @recent_activities.each do |activity| %>
+          <div class="flex items-start space-x-3 p-3 border border-gray-200 rounded-lg">
+            <div class="flex-shrink-0">
+              <div class="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
+                <span class="text-blue-600 text-xs font-medium">
+                  <%= activity.user.first_name.first %>
+                </span>
+              </div>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm text-gray-900">
+                <span class="font-medium"><%= activity.user.first_name %> <%= activity.user.last_name %></span>
+                <%= activity.action.humanize.downcase %>
+              </p>
+              <p class="text-xs text-gray-500">
+                <%= time_ago_in_words(activity.performed_at) %> ago
+              </p>
+              <% if activity.metadata.any? %>
+                <p class="text-xs text-gray-400 mt-1">
+                  <%= activity.metadata.except('ip_address', 'user_agent').to_json %>
+                </p>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-gray-500">No recent activities.</p>
+    <% end %>
+  </div>
+
+  <!-- Navigation -->
+  <div class="flex justify-center space-x-4">
+    <%= link_to "Back to Organizations", organizations_path, class: "bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded" %>
+    <%= link_to "View Organization", organization_path(@organization), class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded" %>
+  </div>
+</div>

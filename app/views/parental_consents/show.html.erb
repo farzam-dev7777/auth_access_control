@@ -1,0 +1,86 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-2xl mx-auto">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">Parental Consent Request</h1>
+      <p class="text-gray-600 mt-2">
+        Review the details below and provide your consent for your child to participate in our platform.
+      </p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Child's Information</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Full Name</label>
+          <p class="mt-1 text-sm text-gray-900"><%= @consent.user.first_name %> <%= @consent.user.last_name %></p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Age</label>
+          <p class="mt-1 text-sm text-gray-900"><%= @consent.user.age %> years old</p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Email Address</label>
+          <p class="mt-1 text-sm text-gray-900"><%= @consent.user.email %></p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Registration Date</label>
+          <p class="mt-1 text-sm text-gray-900"><%= @consent.user.created_at.strftime("%B %d, %Y") %></p>
+        </div>
+      </div>
+
+      <h3 class="text-lg font-medium text-gray-900 mb-3">Organization Details</h3>
+      <div class="bg-gray-50 rounded-md p-4">
+        <p class="text-sm text-gray-900">
+          <strong>Organization:</strong> <%= @organization.name %><br>
+          <strong>Type:</strong> <%= @organization.org_type.humanize %><br>
+          <strong>Members:</strong> <%= @organization.active_members_count %>
+        </p>
+      </div>
+    </div>
+
+    <div class="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-blue-800">Important Information</h3>
+          <div class="mt-2 text-sm text-blue-700">
+            <p>
+              By granting consent, you allow your child to participate in this organization's activities.
+              You can revoke this consent at any time by contacting our support team.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Your Decision</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <%= link_to "Grant Consent", grant_parental_consent_path(@consent.consent_token),
+                    method: :patch,
+                    class: "bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-md text-center transition duration-150 ease-in-out",
+                    data: { confirm: "Are you sure you want to grant consent for your child to participate?" } %>
+
+        <%= link_to "Deny Consent", deny_parental_consent_path(@consent.consent_token),
+                    method: :patch,
+                    class: "bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-md text-center transition duration-150 ease-in-out",
+                    data: { confirm: "Are you sure you want to deny consent? Your child will not be able to participate." } %>
+      </div>
+
+      <div class="mt-6 text-center">
+        <p class="text-sm text-gray-600">
+          This consent request expires on <%= @consent.expires_at.strftime("%B %d, %Y at %I:%M %p") %>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

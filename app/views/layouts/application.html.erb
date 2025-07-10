@@ -22,9 +22,75 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+  <body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg border-b border-gray-200">
+      <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex items-center">
+            <%= link_to root_path, class: "flex items-center space-x-2" do %>
+              <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                <span class="text-white font-bold text-sm">AA</span>
+              </div>
+              <span class="text-xl font-bold text-gray-900">Control</span>
+            <% end %>
+          </div>
+
+          <div class="flex items-center space-x-4">
+            <% if user_signed_in? %>
+              <div class="flex items-center space-x-3">
+                <span class="text-sm text-gray-700">Welcome, <%= current_user.first_name %></span>
+                <div class="relative">
+                  <button class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" id="user-menu">
+                    <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                      <span class="text-gray-600 font-medium text-sm">
+                        <%= current_user.first_name.first.upcase %>
+                      </span>
+                    </div>
+                  </button>
+                </div>
+                <%= button_to "Sign Out", destroy_user_session_path, method: :delete,
+                    class: "bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors" %>
+
+              </div>
+            <% else %>
+              <div class="flex items-center space-x-3">
+                <%= link_to "Sign In", new_user_session_path,
+                    class: "text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium" %>
+                <%= link_to "Sign Up", new_user_registration_path,
+                    class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <% if notice %>
+      <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-md mx-4 mt-4">
+        <p class="text-sm"><%= notice %></p>
+      </div>
+    <% end %>
+
+    <% if alert %>
+      <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-md mx-4 mt-4">
+        <p class="text-sm"><%= alert %></p>
+      </div>
+    <% end %>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-screen-xl mx-auto py-4 sm:px-4 lg:px-6">
       <%= yield %>
     </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200">
+      <div class="max-w-screen-xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <div class="text-center text-gray-500 text-sm">
+          <p>&copy; 2024 Auth Access Control. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

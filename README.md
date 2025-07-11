@@ -1,5 +1,22 @@
 # Access Control Assessment - Two Systems
 
+## Demo User Credentials
+
+| Name           | Email              | Password     | Role/Org                |
+|----------------|--------------------|-------------|-------------------------|
+| John Admin     | john@example.com   | password123 | Admin, All Orgs         |
+| Sarah Manager  | sarah@example.com  | password123 | Moderator               |
+| Mike Employee  | mike@example.com   | password123 | Member                  |
+| Lisa Coordinator| lisa@example.com  | password123 | Member                  |
+| Alex Teen      | alex@example.com   | password123 | Teen                    |
+| Emma Student   | emma@example.com   | password123 | Teen                    |
+| Tommy Child    | tommy@example.com  | password123 | Child (Consent needed)  |
+| Sophie Young   | sophie@example.com | password123 | Child (Consent needed)  |
+
+> **Note:** For child users, parental consent is required before they can participate in organizations.
+
+---
+
 A Rails application demonstrating **two separate access control systems** as required by the assessment.
 
 ## System 1: Organization-Based Access Control
@@ -59,6 +76,7 @@ Controls access based on user age with special safeguards for minors.
    rails db:migrate
    rails db:seed
    ```
+   > This will create all demo users, organizations, memberships, rules, and logs for a full demo environment.
 
 3. **Start the application**
    ```bash

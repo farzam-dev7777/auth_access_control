@@ -5,7 +5,7 @@
     <%= link_to "New Rule", new_organization_participation_rule_path(@organization), class: "bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg mb-6 inline-block shadow transition-colors" %>
 
     <% if @rules.any? %>
-      <div class="bg-white rounded-2xl shadow-xl border border-gray-200 p-6">
+      <div class="bg-white rounded-2xl shadow-xl border border-blue-100 p-6">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
@@ -18,7 +18,7 @@
           </thead>
           <tbody class="bg-white divide-y divide-gray-100">
             <% @rules.each_with_index do |rule, idx| %>
-              <tr class="<%= idx.even? ? 'bg-gray-50' : '' %>">
+              <tr class="<%= idx.even? ? 'bg-blue-50' : '' %>">
                 <td class="px-4 py-3 align-top">
                   <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                     <%= rule.rule_type.humanize %>
@@ -29,9 +29,9 @@
                 </td>
                 <td class="px-4 py-3 align-top">
                   <% if rule.active? %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">Active</span>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">Active</span>
                   <% else %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">Inactive</span>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-200 text-gray-600">Inactive</span>
                   <% end %>
                 </td>
                 <td class="px-4 py-3 align-top">
@@ -39,9 +39,9 @@
                 </td>
                 <td class="px-4 py-3 align-top space-x-2">
                   <%= link_to "Edit", edit_organization_participation_rule_path(@organization, rule),
-                    class: "inline-block bg-blue-100 hover:bg-blue-200 text-blue-800 font-semibold py-1 px-3 rounded transition-colors text-xs shadow-sm" %>
+                    class: "inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1 px-3 rounded transition-colors text-xs shadow-sm" %>
                   <%= link_to "Delete", organization_participation_rule_path(@organization, rule), method: :delete, data: { confirm: "Are you sure?" },
-                    class: "inline-block bg-red-100 hover:bg-red-200 text-red-800 font-semibold py-1 px-3 rounded transition-colors text-xs shadow-sm" %>
+                    class: "inline-block bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded transition-colors text-xs shadow-sm" %>
                 </td>
               </tr>
             <% end %>

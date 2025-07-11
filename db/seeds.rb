@@ -39,8 +39,7 @@ child_users = [
     last_name: user_data[:last_name],
     email: user_data[:email],
     password: "password123",
-    date_of_birth: user_data[:date_of_birth],
-    skip_personal_organization: true
+    date_of_birth: user_data[:date_of_birth]
   )
   users << user
   puts "Created user: #{user.full_name} (#{user.age} years old)"

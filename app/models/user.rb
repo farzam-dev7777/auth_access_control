@@ -17,9 +17,6 @@ class User < ApplicationRecord
   scope :adults, -> { where("date_of_birth <= ?", 18.years.ago) }
   scope :minors, -> { where("date_of_birth > ?", 18.years.ago) }
 
-  # Virtual attribute to skip personal organization creation
-  attr_accessor :skip_personal_organization
-
   def age
     return nil unless date_of_birth
 

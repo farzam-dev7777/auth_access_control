@@ -15,8 +15,7 @@ class MembershipsController < ApplicationController
         password: password,
         password_confirmation: password,
         first_name: params[:first_name].presence || "Invited",
-        last_name: params[:last_name].presence || "User",
-        skip_personal_organization: true # Skip creating personal organization for invited users
+        last_name: params[:last_name].presence || "User"
       )
       user.save!
       new_user = true

@@ -80,7 +80,8 @@ Controls access based on user age with special safeguards for minors.
 
 3. **Start the application**
    ```bash
-   rails server
+   bin/dev
+   bin/jobs (to process background jobs)
    ```
 
 ## Demo Instructions

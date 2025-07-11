@@ -65,7 +65,7 @@ Controls access based on user age with special safeguards for minors.
 
 1. **Clone and install dependencies**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/farzam-dev7777/auth_access_control.git
    cd auth_access_control
    bundle install
    ```

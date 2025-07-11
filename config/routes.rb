@@ -10,6 +10,8 @@ Rails.application.routes.draw do
         get :test
       end
     end
+
+    resources :memberships, only: [:update, :destroy, :create]
   end
 
     resources :parental_consents, only: [:new, :create] do

@@ -1,0 +1,163 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Organization Members</h1>
+    <p class="text-gray-600 mt-2">Manage members of <strong><%= @organization.name %></strong></p>
+  </div>
+
+  <% if current_user.memberships.find_by(organization: @organization)&.role == 'admin' %>
+    <div class="mb-6">
+      <%= form_with url: organization_memberships_path(@organization), method: :post, local: true do |f| %>
+        <div class="flex space-x-2">
+          <%= f.email_field :email, placeholder: "User email", class: "border rounded px-2 py-1" %>
+          <%= f.text_field :first_name, placeholder: "First name (if new)", class: "border rounded px-2 py-1" %>
+          <%= f.text_field :last_name, placeholder: "Last name (if new)", class: "border rounded px-2 py-1" %>
+          <%= f.select :role, Membership.roles.keys.map { |r| [r.humanize, r] }, {}, class: "border rounded px-2 py-1" %>
+          <%= f.submit "Add Member", class: "bg-blue-600 text-white px-4 py-1 rounded" %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <!-- Members List -->
+  <div class="bg-white rounded-lg shadow-md p-6">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-xl font-semibold text-gray-900">Current Members</h2>
+      <span class="text-sm text-gray-600"><%= @memberships.count %> member(s)</span>
+    </div>
+
+    <% if @memberships.any? %>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Member</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% @memberships.each do |membership| %>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-10 w-10">
+                      <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                        <span class="text-blue-600 text-sm font-medium">
+                          <%= membership.user.first_name.first %><%= membership.user.last_name.first %>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="ml-4">
+                      <div class="text-sm font-medium text-gray-900">
+                        <%= membership.user.first_name %> <%= membership.user.last_name %>
+                      </div>
+                      <div class="text-sm text-gray-500">
+                        <%= membership.user.email %>
+                      </div>
+                      <div class="text-xs text-gray-400">
+                        Age: <%= membership.user.age %> (<%= membership.user.age_group.to_s.humanize %>)
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                    <%= case membership.role
+                        when 'admin'
+                          'bg-red-100 text-red-800'
+                        when 'moderator'
+                          'bg-yellow-100 text-yellow-800'
+                        else
+                          'bg-green-100 text-green-800'
+                        end %>">
+                    <%= membership.role.humanize %>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <%= membership.created_at.strftime("%B %d, %Y") %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <% if membership.user.suspended? %>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                      Suspended
+                    </span>
+                  <% elsif membership.user.minor? && !membership.user.has_valid_parental_consent? %>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                      Consent Required
+                    </span>
+                  <% else %>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      Active
+                    </span>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <% if current_user.memberships.find_by(organization: @organization)&.role == 'admin' && membership.user != current_user %>
+                    <div class="flex space-x-2">
+                      <% unless membership.role == 'admin' %>
+                        <%= button_to "Promote to Admin",
+                            organization_membership_path(@organization, membership),
+                            method: :patch,
+                            params: { membership: { role: 'admin' } },
+                            class: "text-indigo-600 hover:text-indigo-900 text-xs",
+                            form: { class: "inline" } %>
+                      <% end %>
+                      <% unless membership.role == 'member' %>
+                        <%= button_to "Demote to Member",
+                            organization_membership_path(@organization, membership),
+                            method: :patch,
+                            params: { membership: { role: 'member' } },
+                            class: "text-yellow-600 hover:text-yellow-900 text-xs",
+                            form: { class: "inline" } %>
+                      <% end %>
+                      <%= button_to "Remove",
+                          organization_membership_path(@organization, membership),
+                          method: :delete,
+                          class: "text-red-600 hover:text-red-900 text-xs",
+                          form: { class: "inline" },
+                          data: { confirm: "Are you sure you want to remove this member?" } %>
+                    </div>
+                  <% else %>
+                    <span class="text-gray-400 text-xs">No actions available</span>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div class="text-center py-8">
+        <p class="text-gray-500">No members found.</p>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Member Statistics -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h3 class="text-lg font-medium text-gray-900 mb-2">Total Members</h3>
+      <p class="text-3xl font-bold text-blue-600"><%= @memberships.count %></p>
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h3 class="text-lg font-medium text-gray-900 mb-2">Admins</h3>
+      <p class="text-3xl font-bold text-red-600"><%= @memberships.where(role: 'admin').count %></p>
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h3 class="text-lg font-medium text-gray-900 mb-2">Active Members</h3>
+      <p class="text-3xl font-bold text-green-600">
+        <%= @memberships.joins(:user).where(users: { suspended: false }).count %>
+      </p>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="flex justify-center space-x-4 mt-8">
+    <%= link_to "Back to Organization", organization_path(@organization),
+                class: "bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded" %>
+    <%= link_to "View Analytics", analytics_organization_path(@organization),
+                class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded" %>
+  </div>
+</div>

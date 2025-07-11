@@ -6,6 +6,7 @@ FactoryBot.define do
     password { 'password123' }
     password_confirmation { 'password123' }
     date_of_birth { 25.years.ago }
+    skip_personal_organization { true } # Skip creating personal organization in tests
 
     trait :minor do
       date_of_birth { 15.years.ago }
@@ -30,6 +31,11 @@ FactoryBot.define do
       suspended { true }
       suspended_at { Time.current }
       suspended_reason { 'Violation of terms' }
+    end
+
+    # Trait for users who should have personal organizations (like real signups)
+    trait :with_personal_organization do
+      skip_personal_organization { false }
     end
   end
 end

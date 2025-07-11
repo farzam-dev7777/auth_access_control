@@ -74,3 +74,5 @@ end
 gem "devise", "~> 4.9"
 
 gem "pundit", "~> 2.5"
+
+gem "letter_opener", "~> 1.10"

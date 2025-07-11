@@ -3,10 +3,10 @@
     <h1 class="text-3xl font-bold text-gray-900 mb-6">New Participation Rule</h1>
     <p class="text-gray-600 mb-6">Add a new participation rule for <strong><%= @organization.name %></strong>.</p>
 
-    <div class="bg-white rounded-lg shadow-md p-6">
-      <%= form_with model: [@organization, @rule], local: true, class: "space-y-6" do |form| %>
+    <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-200">
+      <%= form_with model: [@organization, @rule], local: true, class: "space-y-8" do |form| %>
         <% if @rule.errors.any? %>
-          <div class="bg-red-50 border border-red-200 rounded-md p-4">
+          <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
             <h3 class="text-sm font-medium text-red-800 mb-2">
               <%= pluralize(@rule.errors.count, "error") %> prohibited this rule from being saved:
             </h3>
@@ -18,45 +18,59 @@
           </div>
         <% end %>
 
+        <!-- Rule Details -->
         <div>
-          <%= form.label :rule_type, class: "block text-sm font-medium text-gray-700" %>
-          <%= form.select :rule_type, ParticipationRule::RULE_TYPES.map { |type| [type.humanize, type] }, {},
-                          class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" %>
-        </div>
-
-        <div>
-          <%= form.label :description, class: "block text-sm font-medium text-gray-700" %>
-          <%= form.text_area :description, rows: 2, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" %>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <%= form.label :active, class: "block text-sm font-medium text-gray-700" %>
-            <%= form.check_box :active, class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" %>
-            <span class="ml-2 text-sm text-gray-600">Active</span>
-          </div>
-          <div>
-            <%= form.label :priority, class: "block text-sm font-medium text-gray-700" %>
-            <%= form.number_field :priority, min: 0, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" %>
+          <h2 class="text-lg font-semibold text-blue-900 mb-4 flex items-center">
+            <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Rule Details
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <%= form.label :rule_type, class: "block text-sm font-medium text-gray-700 mb-1" %>
+              <%= form.select :rule_type, ParticipationRule::RULE_TYPES.map { |type| [type.humanize, type] }, {},
+                              class: "mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-medium text-gray-800 transition-all duration-150" %>
+            </div>
+            <div>
+              <%= form.label :priority, class: "block text-sm font-medium text-gray-700 mb-1" %>
+              <%= form.number_field :priority, min: 0, class: "mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-medium text-gray-800 transition-all duration-150" %>
+            </div>
           </div>
         </div>
 
+        <!-- Description -->
         <div>
-          <%= form.label :conditions, "Conditions (JSON)", class: "block text-sm font-medium text-gray-700" %>
-          <%= form.text_area :conditions, value: @rule.conditions.to_json, rows: 2, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 font-mono" %>
-          <p class="mt-1 text-xs text-gray-500">Example: {"allowed_roles":["admin","moderator"],"minimum_age":13}</p>
+          <%= form.label :description, class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= form.text_area :description, rows: 2, placeholder: "Describe what this rule does...", class: "mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-medium text-gray-800 transition-all duration-150" %>
         </div>
 
-        <div>
-          <%= form.label :actions, "Actions (JSON)", class: "block text-sm font-medium text-gray-700" %>
-          <%= form.text_area :actions, value: @rule.actions.to_json, rows: 2, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 font-mono" %>
-          <p class="mt-1 text-xs text-gray-500">Optional. Example: {"notify_admin":true}</p>
+        <!-- Status -->
+        <div class="flex items-center space-x-3">
+          <%= form.check_box :active, class: "h-5 w-5 text-green-600 focus:ring-green-500 border-gray-300 rounded-xl transition-all duration-150" %>
+          <span class="text-sm text-gray-700">Active</span>
+        </div>
+
+        <!-- JSON Fields -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <h3 class="text-sm font-semibold text-blue-800 mb-2 flex items-center">
+            <svg class="w-4 h-4 text-blue-400 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2a4 4 0 014-4h4"/></svg>
+            Advanced: JSON Conditions & Actions
+          </h3>
+          <div class="mb-4">
+            <%= form.label :conditions, "Conditions (JSON)", class: "block text-xs font-medium text-gray-700 mb-1" %>
+            <%= form.text_area :conditions, value: @rule.conditions.to_json, rows: 2, placeholder: '{"allowed_roles":["admin"],"minimum_age":13}', class: "mt-1 block w-full px-4 py-3 bg-blue-50 border border-blue-200 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-mono text-xs transition-all duration-150" %>
+            <p class="mt-1 text-xs text-blue-600">Example: {"allowed_roles":["admin","moderator"],"minimum_age":13}</p>
+          </div>
+          <div>
+            <%= form.label :actions, "Actions (JSON)", class: "block text-xs font-medium text-gray-700 mb-1" %>
+            <%= form.text_area :actions, value: @rule.actions.to_json, rows: 2, placeholder: '{"notify_admin":true}', class: "mt-1 block w-full px-4 py-3 bg-blue-50 border border-blue-200 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-mono text-xs transition-all duration-150" %>
+            <p class="mt-1 text-xs text-blue-600">Optional. Example: {"notify_admin":true}</p>
+          </div>
         </div>
 
         <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
           <%= link_to "Cancel", organization_participation_rules_path(@organization),
-                      class: "bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50" %>
-          <%= form.submit "Create Rule", class: "bg-blue-600 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-blue-700" %>
+                      class: "bg-white py-2 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50" %>
+          <%= form.submit "Create Rule", class: "bg-blue-600 py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white hover:bg-blue-700" %>
         </div>
       <% end %>
     </div>

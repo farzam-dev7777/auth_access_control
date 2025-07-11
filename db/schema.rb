@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_10_075130) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_11_064133) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -29,6 +29,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_10_075130) do
     t.index ["organization_id"], name: "index_activity_logs_on_organization_id"
     t.index ["user_id", "performed_at"], name: "index_activity_logs_on_user_id_and_performed_at"
     t.index ["user_id"], name: "index_activity_logs_on_user_id"
+  end
+
+  create_table "membership_requests", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "organization_id", null: false
+    t.string "status", default: "pending"
+    t.text "message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id"], name: "index_membership_requests_on_organization_id"
+    t.index ["user_id", "organization_id"], name: "index_membership_requests_on_user_id_and_organization_id", unique: true
+    t.index ["user_id"], name: "index_membership_requests_on_user_id"
   end
 
   create_table "memberships", force: :cascade do |t|
@@ -101,6 +113,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_10_075130) do
 
   add_foreign_key "activity_logs", "organizations"
   add_foreign_key "activity_logs", "users"
+  add_foreign_key "membership_requests", "organizations"
+  add_foreign_key "membership_requests", "users"
   add_foreign_key "memberships", "organizations"
   add_foreign_key "memberships", "users"
   add_foreign_key "parental_consents", "users"

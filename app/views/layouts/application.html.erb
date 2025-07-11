@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Auth Access Control" %></title>
+    <title><%= content_for(:title) || "Access Control Assessment" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -10,14 +10,10 @@
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
@@ -28,37 +24,63 @@
       <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
           <div class="flex items-center">
-            <%= link_to root_path, class: "flex items-center space-x-2" do %>
-              <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <span class="text-white font-bold text-sm">AA</span>
+            <%= link_to root_path, class: "flex items-center space-x-3" do %>
+              <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
               </div>
-              <span class="text-xl font-bold text-gray-900">Control</span>
+              <div>
+                <span class="text-xl font-bold text-gray-900">Access Control</span>
+                <span class="text-sm text-gray-500 block">Assessment Demo</span>
+              </div>
             <% end %>
           </div>
 
           <div class="flex items-center space-x-4">
             <% if user_signed_in? %>
+              <!-- System Navigation -->
+              <div class="hidden md:flex items-center space-x-2">
+                <span class="text-xs text-gray-500 uppercase tracking-wide">Systems:</span>
+                <div class="flex space-x-1">
+                  <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    System 1: Organization
+                  </span>
+                  <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    System 2: Age-Based
+                  </span>
+                </div>
+              </div>
+
+              <!-- User Menu -->
               <div class="flex items-center space-x-3">
-                <span class="text-sm text-gray-700">Welcome, <%= current_user.first_name %></span>
+                <div class="text-right hidden sm:block">
+                  <p class="text-sm font-medium text-gray-900"><%= current_user.first_name %> <%= current_user.last_name %></p>
+                  <p class="text-xs text-gray-500">
+                    <%= current_user.age_group.to_s.humanize %> •
+                    <%= current_user.organizations.count %> org(s)
+                  </p>
+                </div>
+
                 <div class="relative">
                   <button class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" id="user-menu">
-                    <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-                      <span class="text-gray-600 font-medium text-sm">
+                    <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                      <span class="text-white font-medium text-sm">
                         <%= current_user.first_name.first.upcase %>
                       </span>
                     </div>
                   </button>
                 </div>
-                <%= button_to "Sign Out", destroy_user_session_path, method: :delete,
-                    class: "bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors" %>
 
+                <%= button_to "Sign Out", destroy_user_session_path, method: :delete,
+                    class: "bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200" %>
               </div>
             <% else %>
               <div class="flex items-center space-x-3">
                 <%= link_to "Sign In", new_user_session_path,
-                    class: "text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium" %>
+                    class: "text-gray-700 hover:text-gray-900 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200" %>
                 <%= link_to "Sign Up", new_user_registration_path,
-                    class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors" %>
+                    class: "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 shadow-md" %>
               </div>
             <% end %>
           </div>
@@ -68,27 +90,68 @@
 
     <!-- Flash Messages -->
     <% if notice %>
-      <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-md mx-4 mt-4">
-        <p class="text-sm"><%= notice %></p>
+      <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mx-4 mt-4 max-w-screen-xl mx-auto">
+        <div class="flex items-center">
+          <svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <p class="text-sm font-medium"><%= notice %></p>
+        </div>
       </div>
     <% end %>
 
     <% if alert %>
-      <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-md mx-4 mt-4">
-        <p class="text-sm"><%= alert %></p>
+      <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mx-4 mt-4 max-w-screen-xl mx-auto">
+        <div class="flex items-center">
+          <svg class="w-5 h-5 text-red-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+          </svg>
+          <p class="text-sm font-medium"><%= alert %></p>
+        </div>
       </div>
     <% end %>
 
     <!-- Main Content -->
-    <main class="flex-grow max-w-screen-xl mx-auto py-4 sm:px-4 lg:px-6">
+    <main class="flex-grow">
       <%= yield %>
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-gray-200">
-      <div class="max-w-screen-xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <div class="text-center text-gray-500 text-sm">
-          <p>&copy; 2024 Auth Access Control. All rights reserved.</p>
+    <footer class="bg-white border-t border-gray-200 mt-12">
+      <div class="max-w-screen-xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <h3 class="text-sm font-semibold text-gray-900 mb-4">Access Control Assessment</h3>
+            <p class="text-sm text-gray-600">
+              Demonstrating two separate access control systems: organization-based and age-based access control.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold text-gray-900 mb-4">Systems</h3>
+            <ul class="space-y-2 text-sm text-gray-600">
+              <li>• Organization-Based Access Control</li>
+              <li>• Age-Based Participation Rules</li>
+              <li>• Role-Based Permissions</li>
+              <li>• Parental Consent Workflow</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold text-gray-900 mb-4">Demo Features</h3>
+            <ul class="space-y-2 text-sm text-gray-600">
+              <li>• Analytics Dashboard</li>
+              <li>• Member Management</li>
+              <li>• Age Verification</li>
+              <li>• Activity Logging</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-8 border-t border-gray-200 text-center">
+          <p class="text-sm text-gray-500">
+            &copy; 2024 Access Control Assessment. Built for educational demonstration purposes.
+          </p>
         </div>
       </div>
     </footer>

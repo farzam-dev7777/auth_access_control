@@ -16,7 +16,6 @@ class MembershipsController < ApplicationController
         password_confirmation: password,
         first_name: params[:first_name].presence || 'Invited',
         last_name: params[:last_name].presence || 'User',
-        date_of_birth: 18.years.ago, # Default to adult age for invited users
         skip_personal_organization: true # Skip creating personal organization for invited users
       )
       user.save!

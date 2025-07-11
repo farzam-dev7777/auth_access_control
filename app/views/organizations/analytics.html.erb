@@ -1,50 +1,239 @@
-<div class="container mx-auto px-4 py-8">
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900">Organization Analytics</h1>
-    <p class="text-gray-600 mt-2">Analytics and engagement metrics for <strong><%= @organization.name %></strong>.</p>
-  </div>
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+  <div class="container mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex justify-between items-start">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Organization Analytics</h1>
+          <p class="text-gray-600 mt-2">
+            Comprehensive analytics and engagement metrics for <strong><%= @organization.name %></strong>
+          </p>
+        </div>
+        <div class="flex space-x-3">
+          <%= link_to "Back to Organization", organization_path(@organization),
+                      class: "bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200" %>
+          <%= link_to "Manage Members", members_organization_path(@organization),
+                      class: "bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200" %>
+          <% if policy(@organization).export_analytics? %>
+            <%= link_to "Export Analytics", export_analytics_organization_path(@organization, format: :csv),
+                        class: "bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200" %>
+          <% end %>
+          <% if policy(@organization).generate_report? %>
+            <%= link_to "Generate Report", generate_report_organization_path(@organization, format: :pdf),
+                        class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
 
-
-
-  <!-- Recent Activities -->
-  <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-    <h2 class="text-xl font-semibold text-gray-900 mb-4">Recent Activities</h2>
-    <% if @recent_activities.any? %>
-      <div class="space-y-4">
-        <% @recent_activities.each do |activity| %>
-          <div class="flex items-start space-x-3 p-3 border border-gray-200 rounded-lg">
-            <div class="flex-shrink-0">
-              <div class="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
-                <span class="text-blue-600 text-xs font-medium">
-                  <%= activity.user.first_name.first %>
-                </span>
-              </div>
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm text-gray-900">
-                <span class="font-medium"><%= activity.user.first_name %> <%= activity.user.last_name %></span>
-                <%= activity.action.humanize.downcase %>
-              </p>
-              <p class="text-xs text-gray-500">
-                <%= time_ago_in_words(activity.performed_at) %> ago
-              </p>
-              <% if activity.metadata.any? %>
-                <p class="text-xs text-gray-400 mt-1">
-                  <%= activity.metadata.except('ip_address', 'user_agent').to_json %>
-                </p>
-              <% end %>
+    <!-- Key Metrics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+              </svg>
             </div>
           </div>
-        <% end %>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Total Members</p>
+            <p class="text-2xl font-bold text-gray-900"><%= @organization.active_members_count %></p>
+          </div>
+        </div>
       </div>
-    <% else %>
-      <p class="text-gray-500">No recent activities.</p>
-    <% end %>
-  </div>
 
-  <!-- Navigation -->
-  <div class="flex justify-center space-x-4">
-    <%= link_to "Back to Organizations", organizations_path, class: "bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded" %>
-    <%= link_to "View Organization", organization_path(@organization), class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded" %>
+      <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Active Members</p>
+            <p class="text-2xl font-bold text-gray-900">
+              <%= @organization.memberships.joins(:user).where(users: { suspended: false }).count %>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Recent Activities</p>
+            <p class="text-2xl font-bold text-gray-900"><%= @recent_activities.count %></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-8 h-8 bg-yellow-600 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Organization Age</p>
+            <p class="text-2xl font-bold text-gray-900">
+              <%= ((Time.current - @organization.created_at) / 1.day).floor %> days
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Role Distribution Chart -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+      <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Role Distribution</h2>
+        <div class="space-y-4">
+          <% role_counts = @organization.memberships.group(:role).count %>
+          <% total_members = role_counts.values.sum %>
+
+          <% role_counts.each do |role, count| %>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <div class="w-4 h-4 rounded-full mr-3
+                  <%= case role
+                      when 'admin'
+                        'bg-red-500'
+                      when 'moderator'
+                        'bg-yellow-500'
+                      else
+                        'bg-green-500'
+                      end %>">
+                </div>
+                <span class="text-sm font-medium text-gray-700"><%= role.humanize %></span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <div class="w-24 bg-gray-200 rounded-full h-2">
+                  <div class="bg-blue-600 h-2 rounded-full" style="width: <%= (count.to_f / total_members * 100).round %>%"></div>
+                </div>
+                <span class="text-sm text-gray-500 w-8 text-right"><%= count %></span>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Age Distribution -->
+      <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Age Distribution</h2>
+        <div class="space-y-4">
+          <% age_groups = @organization.users.group_by(&:age_group) %>
+          <% age_groups.each do |group, users| %>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <div class="w-4 h-4 rounded-full mr-3
+                  <%= case group
+                      when :child
+                        'bg-blue-500'
+                      when :teen
+                        'bg-green-500'
+                      when :adult
+                        'bg-purple-500'
+                      else
+                        'bg-gray-500'
+                      end %>">
+                </div>
+                <span class="text-sm font-medium text-gray-700"><%= group.to_s.humanize %></span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <div class="w-24 bg-gray-200 rounded-full h-2">
+                  <div class="bg-blue-600 h-2 rounded-full" style="width: <%= (users.count.to_f / @organization.users.count * 100).round %>%"></div>
+                </div>
+                <span class="text-sm text-gray-500 w-8 text-right"><%= users.count %></span>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activities -->
+    <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-semibold text-gray-900">Recent Activities</h2>
+        <span class="text-sm text-gray-500">Last 7 days</span>
+      </div>
+
+      <% if @recent_activities.any? %>
+        <div class="space-y-4">
+          <% @recent_activities.each do |activity| %>
+            <div class="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <div class="flex-shrink-0">
+                <div class="h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center">
+                  <span class="text-blue-600 text-sm font-medium">
+                    <%= activity.user.first_name.first %>
+                  </span>
+                </div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <p class="text-sm font-medium text-gray-900">
+                    <span class="font-semibold"><%= activity.user.first_name %> <%= activity.user.last_name %></span>
+                    <span class="text-gray-600">
+                      <%= activity.action.humanize.downcase %>
+                    </span>
+                  </p>
+                  <span class="text-xs text-gray-500">
+                    <%= time_ago_in_words(activity.performed_at) %> ago
+                  </span>
+                </div>
+                <% if activity.metadata.any? %>
+                  <div class="mt-1 text-xs text-gray-500">
+                    <% metadata = activity.metadata.except('ip_address', 'user_agent') %>
+                    <% if metadata.any? %>
+                      <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
+                        <%= metadata.to_json %>
+                      </span>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center py-8">
+          <div class="text-gray-400 mb-4">
+            <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-medium text-gray-900 mb-2">No Recent Activities</h3>
+          <p class="text-gray-600">
+            Activity will appear here as members interact with the organization.
+          </p>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="mt-8 flex justify-center space-x-4">
+      <% if policy(@organization).export_analytics? %>
+        <%= link_to "Export Analytics", export_analytics_organization_path(@organization, format: :csv),
+                    class: "bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200" %>
+      <% end %>
+      <% if policy(@organization).generate_report? %>
+        <%= link_to "Generate Report", generate_report_organization_path(@organization, format: :pdf),
+                    class: "bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200" %>
+      <% end %>
+    </div>
   </div>
 </div>

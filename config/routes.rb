@@ -1,8 +1,14 @@
 Rails.application.routes.draw do
+  get "membership_requests/create"
+  get "membership_requests/destroy"
+  get "membership_requests/approve"
+  get "membership_requests/reject"
   resources :organizations, only: %i[index show new create edit update destroy] do
     member do
       get :analytics
       get :members
+      get :export_analytics
+      get :generate_report
     end
 
     resources :participation_rules, except: [:show] do
@@ -12,6 +18,14 @@ Rails.application.routes.draw do
     end
 
     resources :memberships, only: [:update, :destroy, :create]
+    resources :membership_requests, only: [:create]
+  end
+
+  resources :membership_requests, only: [:destroy] do
+    member do
+      patch :approve
+      patch :reject
+    end
   end
 
     resources :parental_consents, only: [:new, :create] do

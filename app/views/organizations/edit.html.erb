@@ -3,9 +3,9 @@
     <div class="max-w-4xl mx-auto">
       <!-- Header -->
       <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-4">Create New Organization</h1>
+        <h1 class="text-3xl font-bold text-gray-900 mb-4">Edit Organization</h1>
         <p class="text-gray-600 max-w-2xl mx-auto">
-          Set up your organization with both organization-based and age-based access control systems
+          Update your organization's details and access control settings
         </p>
       </div>
 
@@ -68,32 +68,10 @@
           <div class="flex items-center mb-6 border-b border-gray-100 pb-4">
             <div class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center mr-3">
               <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/>
               </svg>
             </div>
             <h2 class="text-xl font-semibold text-gray-900">Age-Based Participation Rules</h2>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Minimum Age</label>
-              <%= form.number_field :min_age,
-                                    placeholder: "e.g., 13",
-                                    min: 0,
-                                    max: 120,
-                                    class: "w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200" %>
-              <p class="mt-1 text-xs text-gray-500">Leave empty for no minimum age</p>
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Maximum Age</label>
-              <%= form.number_field :max_age,
-                                    placeholder: "e.g., 65",
-                                    min: 0,
-                                    max: 120,
-                                    class: "w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200" %>
-              <p class="mt-1 text-xs text-gray-500">Leave empty for no maximum age</p>
-            </div>
           </div>
 
           <div class="space-y-4">
@@ -120,22 +98,18 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/>
               </svg>
               <div>
-                <h3 class="text-sm font-medium text-yellow-800">Important Note</h3>
+                <h3 class="text-sm font-medium text-yellow-800">Note</h3>
                 <p class="text-sm text-yellow-700 mt-1">
-                  Age-based restrictions help ensure compliance with privacy laws and provide appropriate safeguards for minors.
-                  These settings can be modified later in the organization settings.
+                  These settings help you comply with privacy laws and ensure appropriate safeguards for minors.
                 </p>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Form Actions -->
-        <div class="flex justify-end space-x-4 pt-6 border-t border-gray-100">
-          <%= link_to "Cancel", organizations_path,
-                      class: "bg-white py-2 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
-          <%= form.submit "Create Organization",
-                          class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md flex items-center" %>
+        <div class="flex justify-between items-center pt-6 border-t border-gray-200">
+          <%= link_to "Cancel", @organization, class: "bg-white py-2 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50" %>
+          <%= form.submit "Update Organization", class: "bg-blue-600 py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white hover:bg-blue-700" %>
         </div>
       <% end %>
     </div>

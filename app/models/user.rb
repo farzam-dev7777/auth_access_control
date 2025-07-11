@@ -6,6 +6,7 @@ class User < ApplicationRecord
 
   has_many :memberships
   has_many :organizations, through: :memberships
+  has_many :membership_requests, dependent: :destroy
   has_one :parental_consent, dependent: :destroy
 
   validates :first_name, :last_name, presence: true
@@ -15,8 +16,6 @@ class User < ApplicationRecord
 
   scope :adults, -> { where('date_of_birth <= ?', 18.years.ago) }
   scope :minors, -> { where('date_of_birth > ?', 18.years.ago) }
-
-  after_create :create_personal_organization, unless: :skip_personal_organization
 
   # Virtual attribute to skip personal organization creation
   attr_accessor :skip_personal_organization
@@ -85,8 +84,8 @@ class User < ApplicationRecord
   def minimum_age_requirement
     return if date_of_birth.blank?
 
-    if date_of_birth > 13.years.ago
-      errors.add(:date_of_birth, "You must be at least 13 years old to register.")
+    if date_of_birth > 10.years.ago
+      errors.add(:date_of_birth, "You must be at least 10 years old to register.")
     end
   end
 
@@ -98,17 +97,5 @@ class User < ApplicationRecord
     end
   end
 
-  def create_personal_organization
-    org = Organization.create!(
-      name: "#{first_name} #{last_name}'s Organization",
-      org_type: :community,
-      settings: {
-        allow_minors: true,
-        requires_parental_consent: false,
-        min_age: nil,
-        max_age: nil
-      }
-    )
-    memberships.create!(organization: org, role: :admin)
-  end
+
 end

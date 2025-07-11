@@ -1,163 +1,359 @@
-<div class="container mx-auto px-4 py-8">
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900">Organization Members</h1>
-    <p class="text-gray-600 mt-2">Manage members of <strong><%= @organization.name %></strong></p>
-  </div>
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+  <div class="container mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex justify-between items-start">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Organization Members</h1>
+          <p class="text-gray-600 mt-2">
+            Manage members and roles for <strong><%= @organization.name %></strong>
+          </p>
+        </div>
+        <div class="flex space-x-3">
+          <%= link_to "Back to Organization", organization_path(@organization),
+                      class: "bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200" %>
+          <%= link_to "View Analytics", analytics_organization_path(@organization),
+                      class: "bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200" %>
+        </div>
+      </div>
+    </div>
 
-  <% if current_user.memberships.find_by(organization: @organization)&.role == 'admin' %>
-    <div class="mb-6">
-      <%= form_with url: organization_memberships_path(@organization), method: :post, local: true do |f| %>
-        <div class="flex space-x-2">
-          <%= f.email_field :email, placeholder: "User email", class: "border rounded px-2 py-1" %>
-          <%= f.text_field :first_name, placeholder: "First name (if new)", class: "border rounded px-2 py-1" %>
-          <%= f.text_field :last_name, placeholder: "Last name (if new)", class: "border rounded px-2 py-1" %>
-          <%= f.select :role, Membership.roles.keys.map { |r| [r.humanize, r] }, {}, class: "border rounded px-2 py-1" %>
-          <%= f.submit "Add Member", class: "bg-blue-600 text-white px-4 py-1 rounded" %>
+    <!-- Add Member Form (Admin Only) -->
+    <% if current_user.memberships.find_by(organization: @organization)&.role == 'admin' %>
+      <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200 mb-8">
+        <div class="flex items-center mb-6">
+          <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+            </svg>
+          </div>
+          <h2 class="text-xl font-semibold text-gray-900">Add New Member</h2>
+        </div>
+
+        <%= form_with url: organization_memberships_path(@organization), method: :post, local: true, class: "space-y-6" do |f| %>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Email Address <span class="text-red-500">*</span>
+              </label>
+              <%= f.email_field :email,
+                                placeholder: "user@example.com",
+                                required: true,
+                                class: "w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200" %>
+              <p class="mt-1 text-xs text-gray-500">Required for invitation</p>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                First Name
+              </label>
+              <%= f.text_field :first_name,
+                               placeholder: "John",
+                               class: "w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200" %>
+              <p class="mt-1 text-xs text-gray-500">Optional for new users</p>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Last Name
+              </label>
+              <%= f.text_field :last_name,
+                               placeholder: "Doe",
+                               class: "w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200" %>
+              <p class="mt-1 text-xs text-gray-500">Optional for new users</p>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Role <span class="text-red-500">*</span>
+              </label>
+              <div class="relative">
+                <%= f.select :role,
+                             Membership.roles.keys.map { |r| [r.humanize, r] },
+                             { prompt: "Select a role" },
+                             { required: true, class: "w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 appearance-none" } %>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                  <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.584l3.71-4.354a.75.75 0 111.14.976l-4.25 5a.75.75 0 01-1.14 0l-4.25-5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                  </svg>
+                </div>
+              </div>
+              <p class="mt-1 text-xs text-gray-500">Member permissions level</p>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+            <div class="text-sm text-gray-600">
+              <svg class="inline w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              New users will receive an email invitation to join
+            </div>
+            <%= f.submit "Add Member",
+                         class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md flex items-center" do %>
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+              </svg>
+              Add Member
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <!-- Pending Requests (Admin Only) -->
+    <% if current_user.memberships.find_by(organization: @organization)&.role == 'admin' %>
+      <% pending_requests = @organization.membership_requests.pending.includes(:user) %>
+      <% if pending_requests.any? %>
+        <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200 mb-8">
+          <div class="flex items-center mb-6">
+            <div class="w-8 h-8 bg-yellow-600 rounded-lg flex items-center justify-center mr-3">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <h2 class="text-xl font-semibold text-gray-900">Pending Join Requests (<%= pending_requests.count %>)</h2>
+          </div>
+
+          <div class="space-y-4">
+            <% pending_requests.each do |request| %>
+              <div class="flex items-center justify-between p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10">
+                    <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                      <span class="text-blue-600 text-sm font-medium">
+                        <%= request.user.first_name.first %><%= request.user.last_name.first %>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900">
+                      <%= request.user.first_name %> <%= request.user.last_name %>
+                    </div>
+                    <div class="text-sm text-gray-500">
+                      <%= request.user.email %>
+                    </div>
+                    <div class="text-xs text-gray-400">
+                      Age: <%= request.user.age %> (<%= request.user.age_group.to_s.humanize %>)
+                    </div>
+                    <% if request.message.present? %>
+                      <div class="text-sm text-gray-600 mt-1">
+                        <strong>Message:</strong> <%= request.message %>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+                <div class="flex space-x-2">
+                  <%= button_to "Approve", approve_membership_request_path(request),
+                                method: :patch,
+                                class: "bg-green-600 hover:bg-green-700 text-white text-xs font-medium py-2 px-3 rounded transition-colors duration-200" %>
+                  <%= button_to "Reject", reject_membership_request_path(request),
+                                method: :patch,
+                                class: "bg-red-600 hover:bg-red-700 text-white text-xs font-medium py-2 px-3 rounded transition-colors duration-200" %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+
+    <!-- Member Statistics -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Total Members</p>
+            <p class="text-2xl font-bold text-gray-900"><%= @memberships.count %></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Admins</p>
+            <p class="text-2xl font-bold text-gray-900"><%= @memberships.where(role: 'admin').count %></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Active Members</p>
+            <p class="text-2xl font-bold text-gray-900">
+              <%= @memberships.joins(:user).where(users: { suspended: false }).count %>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-8 h-8 bg-yellow-600 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Minors</p>
+            <p class="text-2xl font-bold text-gray-900">
+              <%= @memberships.joins(:user).where('users.date_of_birth > ?', 18.years.ago).count %>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Members List -->
+    <div class="bg-white rounded-xl shadow-lg border border-gray-200">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <div class="flex justify-between items-center">
+          <h2 class="text-xl font-semibold text-gray-900">Current Members</h2>
+          <span class="text-sm text-gray-600"><%= @memberships.count %> member(s)</span>
+        </div>
+      </div>
+
+      <% if @memberships.any? %>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Member</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <% @memberships.each do |membership| %>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div class="flex-shrink-0 h-10 w-10">
+                        <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                          <span class="text-blue-600 text-sm font-medium">
+                            <%= membership.user.first_name.first %><%= membership.user.last_name.first %>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-900">
+                          <%= membership.user.first_name %> <%= membership.user.last_name %>
+                        </div>
+                        <div class="text-sm text-gray-500">
+                          <%= membership.user.email %>
+                        </div>
+                        <div class="text-xs text-gray-400">
+                          Age: <%= membership.user.age %> (<%= membership.user.age_group.to_s.humanize %>)
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                      <%= case membership.role
+                          when 'admin'
+                            'bg-red-100 text-red-800'
+                          when 'moderator'
+                            'bg-yellow-100 text-yellow-800'
+                          else
+                            'bg-green-100 text-green-800'
+                          end %>">
+                      <%= membership.role.humanize %>
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <%= membership.created_at.strftime("%B %d, %Y") %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <% if membership.user.suspended? %>
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                        Suspended
+                      </span>
+                    <% elsif membership.user.minor? && !membership.user.has_valid_parental_consent? %>
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                        Consent Required
+                      </span>
+                    <% else %>
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        Active
+                      </span>
+                    <% end %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <% if current_user.memberships.find_by(organization: @organization)&.role == 'admin' && membership.user != current_user %>
+                      <div class="flex space-x-2">
+                        <% unless membership.role == 'admin' %>
+                          <%= button_to "Promote to Admin",
+                              organization_membership_path(@organization, membership),
+                              method: :patch,
+                              params: { membership: { role: 'admin' } },
+                              class: "text-indigo-600 hover:text-indigo-900 text-xs font-medium",
+                              form: { class: "inline" } %>
+                        <% end %>
+                        <% unless membership.role == 'member' %>
+                          <%= button_to "Demote to Member",
+                              organization_membership_path(@organization, membership),
+                              method: :patch,
+                              params: { membership: { role: 'member' } },
+                              class: "text-yellow-600 hover:text-yellow-900 text-xs font-medium",
+                              form: { class: "inline" } %>
+                        <% end %>
+                        <%= button_to "Remove",
+                            organization_membership_path(@organization, membership),
+                            method: :delete,
+                            class: "text-red-600 hover:text-red-900 text-xs font-medium",
+                            form: { class: "inline" },
+                            data: { confirm: "Are you sure you want to remove this member?" } %>
+                      </div>
+                    <% else %>
+                      <span class="text-gray-400 text-xs">No actions available</span>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <div class="text-center py-12">
+          <div class="text-gray-400 mb-4">
+            <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-medium text-gray-900 mb-2">No Members Yet</h3>
+          <p class="text-gray-600">
+            Start by adding members to your organization using the form above.
+          </p>
         </div>
       <% end %>
     </div>
-  <% end %>
-
-  <!-- Members List -->
-  <div class="bg-white rounded-lg shadow-md p-6">
-    <div class="flex justify-between items-center mb-6">
-      <h2 class="text-xl font-semibold text-gray-900">Current Members</h2>
-      <span class="text-sm text-gray-600"><%= @memberships.count %> member(s)</span>
-    </div>
-
-    <% if @memberships.any? %>
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Member</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <% @memberships.each do |membership| %>
-              <tr>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="flex items-center">
-                    <div class="flex-shrink-0 h-10 w-10">
-                      <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                        <span class="text-blue-600 text-sm font-medium">
-                          <%= membership.user.first_name.first %><%= membership.user.last_name.first %>
-                        </span>
-                      </div>
-                    </div>
-                    <div class="ml-4">
-                      <div class="text-sm font-medium text-gray-900">
-                        <%= membership.user.first_name %> <%= membership.user.last_name %>
-                      </div>
-                      <div class="text-sm text-gray-500">
-                        <%= membership.user.email %>
-                      </div>
-                      <div class="text-xs text-gray-400">
-                        Age: <%= membership.user.age %> (<%= membership.user.age_group.to_s.humanize %>)
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                    <%= case membership.role
-                        when 'admin'
-                          'bg-red-100 text-red-800'
-                        when 'moderator'
-                          'bg-yellow-100 text-yellow-800'
-                        else
-                          'bg-green-100 text-green-800'
-                        end %>">
-                    <%= membership.role.humanize %>
-                  </span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  <%= membership.created_at.strftime("%B %d, %Y") %>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <% if membership.user.suspended? %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                      Suspended
-                    </span>
-                  <% elsif membership.user.minor? && !membership.user.has_valid_parental_consent? %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                      Consent Required
-                    </span>
-                  <% else %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                      Active
-                    </span>
-                  <% end %>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <% if current_user.memberships.find_by(organization: @organization)&.role == 'admin' && membership.user != current_user %>
-                    <div class="flex space-x-2">
-                      <% unless membership.role == 'admin' %>
-                        <%= button_to "Promote to Admin",
-                            organization_membership_path(@organization, membership),
-                            method: :patch,
-                            params: { membership: { role: 'admin' } },
-                            class: "text-indigo-600 hover:text-indigo-900 text-xs",
-                            form: { class: "inline" } %>
-                      <% end %>
-                      <% unless membership.role == 'member' %>
-                        <%= button_to "Demote to Member",
-                            organization_membership_path(@organization, membership),
-                            method: :patch,
-                            params: { membership: { role: 'member' } },
-                            class: "text-yellow-600 hover:text-yellow-900 text-xs",
-                            form: { class: "inline" } %>
-                      <% end %>
-                      <%= button_to "Remove",
-                          organization_membership_path(@organization, membership),
-                          method: :delete,
-                          class: "text-red-600 hover:text-red-900 text-xs",
-                          form: { class: "inline" },
-                          data: { confirm: "Are you sure you want to remove this member?" } %>
-                    </div>
-                  <% else %>
-                    <span class="text-gray-400 text-xs">No actions available</span>
-                  <% end %>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    <% else %>
-      <div class="text-center py-8">
-        <p class="text-gray-500">No members found.</p>
-      </div>
-    <% end %>
-  </div>
-
-  <!-- Member Statistics -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-    <div class="bg-white rounded-lg shadow-md p-6">
-      <h3 class="text-lg font-medium text-gray-900 mb-2">Total Members</h3>
-      <p class="text-3xl font-bold text-blue-600"><%= @memberships.count %></p>
-    </div>
-    <div class="bg-white rounded-lg shadow-md p-6">
-      <h3 class="text-lg font-medium text-gray-900 mb-2">Admins</h3>
-      <p class="text-3xl font-bold text-red-600"><%= @memberships.where(role: 'admin').count %></p>
-    </div>
-    <div class="bg-white rounded-lg shadow-md p-6">
-      <h3 class="text-lg font-medium text-gray-900 mb-2">Active Members</h3>
-      <p class="text-3xl font-bold text-green-600">
-        <%= @memberships.joins(:user).where(users: { suspended: false }).count %>
-      </p>
-    </div>
-  </div>
-
-  <!-- Navigation -->
-  <div class="flex justify-center space-x-4 mt-8">
-    <%= link_to "Back to Organization", organization_path(@organization),
-                class: "bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded" %>
-    <%= link_to "View Analytics", analytics_organization_path(@organization),
-                class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded" %>
   </div>
 </div>

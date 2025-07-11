@@ -1,6 +1,7 @@
 class Organization < ApplicationRecord
   has_many :memberships
   has_many :users, through: :memberships
+  has_many :membership_requests, dependent: :destroy
   has_many :participation_rules, dependent: :destroy
   has_many :activity_logs, dependent: :destroy
 

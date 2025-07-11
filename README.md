@@ -1,20 +1,42 @@
-# Custom Authentication & Access Control System
+# Access Control Assessment - Two Systems
 
-A Rails application demonstrating organization-based and age-based access control with parental consent workflows.
+A Rails application demonstrating **two separate access control systems** as required by the assessment.
 
-## Core Features
+## System 1: Organization-Based Access Control
 
-### Organization-Based Access Control
-- **Membership Verification**: Users can join organizations with role-based access
-- **Role-Based Permissions**: Admin, moderator, and member roles with different capabilities
+Controls access based on which company/organization someone belongs to.
+
+### Core Features:
+- **Organization Membership System**: Verify users work for specific companies
+- **Role-Based Permissions**: Admin, Manager, Employee roles with different access levels
 - **Organization-Specific Rules**: Custom participation rules per organization
-- **Activity Logging**: Basic activity tracking
+- **Analytics & Reporting**: Dashboard showing usage statistics and activity reports
 
-### Age-Based Participation Rules
-- **Age Verification**: Date of birth validation during registration
-- **Age-Group Specific Access**: Different access levels based on age groups (Child: 0-12, Teen: 13-17, Adult: 18+)
+### Demo Path:
+1. Create an organization
+2. Add members with different roles
+3. Set organization-specific rules
+4. View analytics dashboard
+
+---
+
+## System 2: Age-Based Participation Rules
+
+Controls access based on user age with special safeguards for minors.
+
+### Core Features:
+- **Age Verification**: Reliable age confirmation during signup
+- **Age-Group Specific Areas**: Separate spaces for different age groups
 - **Content Filtering**: Age-appropriate content access
-- **Parental Consent Workflow**: Token-based consent system for minors (< 13)
+- **Parental Consent System**: Required approval for users under 18
+
+### Demo Path:
+1. Register users of different ages
+2. Show age-specific access areas
+3. Demonstrate parental consent workflow
+4. Display content filtering
+
+---
 
 ## Setup Instructions
 
@@ -35,6 +57,7 @@ A Rails application demonstrating organization-based and age-based access contro
    ```bash
    rails db:create
    rails db:migrate
+   rails db:seed
    ```
 
 3. **Start the application**
@@ -42,116 +65,85 @@ A Rails application demonstrating organization-based and age-based access contro
    rails server
    ```
 
-## Usage
+## Demo Instructions
 
-### Organization Management
+### System 1 Demo: Organization-Based Access Control
 
 1. **Create Organization**
    - Visit `/organizations/new`
-   - Set age restrictions and consent requirements
+   - Set organization type and settings
    - Configure participation rules
 
 2. **Manage Members**
-   - View organization members at `/organizations/:id/members`
-   - Assign roles and manage permissions
+   - Add members with different roles (Admin, Manager, Employee)
+   - View member management at `/organizations/:id/members`
+   - Demonstrate role-based permissions
 
-3. **View Activities**
-   - Access recent activities at `/organizations/:id/analytics`
+3. **View Analytics**
+   - Access analytics dashboard at `/organizations/:id/analytics`
+   - Show usage statistics and activity reports
 
-### Parental Consent Workflow
+### System 2 Demo: Age-Based Participation Rules
 
-1. **For Minors (< 13)**
-   - Registration automatically triggers consent requirement
-   - Visit `/parental_consents/new` to request consent
-   - Enter parent/guardian email
+1. **Age Verification**
+   - Register users of different ages (child, teen, adult)
+   - Show age validation during signup
 
-2. **For Parents**
-   - Use the consent token provided to access consent request
-   - Review child's information and organization details
-   - Grant or deny consent
+2. **Age-Specific Access**
+   - Demonstrate different access levels based on age
+   - Show content filtering for different age groups
+
+3. **Parental Consent Workflow**
+   - For users under 18, show consent requirement
+   - Walk through parent approval process
+   - Demonstrate consent verification
+
+## Key Success Criteria
+
+### Security Features:
+- **Secure Authentication**: Devise-based user authentication
+- **Role-Based Authorization**: Pundit-based permission system
+- **Age Verification**: Enforced minimum age requirements
+- **Parental Consent**: Required for users under 18
+- **Organization Isolation**: Users can only access their organizations
+- **Activity Logging**: Comprehensive audit trail
+
+### Technical Requirements:
+- **Clean UI**: Modern, professional interface using Tailwind CSS
+- **Responsive Design**: Works on desktop and mobile
+- **Database Design**: Proper relationships and constraints
+- **API Design**: RESTful endpoints for both systems
+- **Documentation**: Clear code and feature documentation
 
 ## Database Schema
 
 ### Key Models
 
-- **User**: Core user model with age verification and consent tracking
-- **Organization**: Organizations with age restrictions and settings
+- **User**: Core user model with age verification
+- **Organization**: Organizations with settings and rules
 - **Membership**: User-organization relationships with roles
 - **ParentalConsent**: Consent workflow for minors
-- **ParticipationRule**: Organization-specific participation rules
-- **ActivityLog**: Basic activity tracking
+- **ParticipationRule**: Organization-specific rules
+- **ActivityLog**: Activity tracking and analytics
 
 ### Key Relationships
 
 - Users belong to organizations through memberships
 - Users have one parental consent (if required)
-- Organizations have many participation rules
-- Organizations have many activity logs
-
-## API Endpoints
-
-### Organizations
-- `GET /organizations` - List user's organizations
-- `GET /organizations/:id` - View organization details
-- `POST /organizations` - Create new organization
-- `GET /organizations/:id/analytics` - View recent activities
-- `GET /organizations/:id/members` - View members
-
-### Parental Consent
-- `GET /parental_consents/new` - Request consent form
-- `POST /parental_consents` - Submit consent request
-- `GET /parental_consents/:token` - Review consent request
-- `PATCH /parental_consents/:token/grant` - Grant consent
-- `PATCH /parental_consents/:token/deny` - Deny consent
-
-### Participation Rules
-- `GET /organizations/:id/participation_rules` - List rules
-- `POST /organizations/:id/participation_rules` - Create rule
-- `PATCH /organizations/:id/participation_rules/:id` - Update rule
-- `DELETE /organizations/:id/participation_rules/:id` - Delete rule
-
-## Security Features
-
-- **Age Verification**: Enforced minimum age requirements
-- **Parental Consent**: Required for users under 13
-- **Role-Based Access**: Different permissions for different roles
-- **Organization Isolation**: Users can only access their organizations
-- **Activity Logging**: Basic audit trail
-- **Account Suspension**: Support for suspending users
+- Organizations have many participation rules and activity logs
+- Role-based permissions control access levels
 
 ## Development
 
 ### Running Tests
 ```bash
-# Run all RSpec tests
 bundle exec rspec
-
-# Run specific test files
-bundle exec rspec spec/models/user_spec.rb
-bundle exec rspec spec/services/participation_service_spec.rb
-
-# Run tests with documentation
-bundle exec rspec --format documentation
 ```
 
 ### Code Quality
 ```bash
 bundle exec rubocop
 ```
-
-### Database Reset
-```bash
-rails db:reset
-```
-
-### Test Coverage
-The test suite includes:
-- Model validations and associations
-- Business logic (age calculations, consent workflows)
-- Service layer functionality
-- Edge cases and error conditions
-
-See `spec/README.md` for detailed testing documentation.
 
 ## License
 

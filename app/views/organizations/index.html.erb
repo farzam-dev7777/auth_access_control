@@ -1,99 +1,329 @@
-<div class="container mx-auto px-4 py-8">
-  <!-- Welcome Message -->
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900">My Organizations</h1>
-    <p class="text-gray-600 mt-2">
-      Welcome, <%= current_user.first_name %>! Here are the organizations you're a member of.
-    </p>
-  </div>
-
-  <!-- Action Buttons -->
-  <div class="flex justify-between items-center mb-8">
-    <div class="flex space-x-4">
-      <%= link_to "Create New Organization", new_organization_path,
-                  class: "bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors duration-200" %>
-      <%= link_to "Join Organization", "#",
-                  class: "bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-colors duration-200" %>
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+  <div class="container mx-auto px-4 py-12">
+    <!-- Welcome Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">Access Control Assessment</h1>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Two separate systems demonstrating organization-based and age-based access control
+      </p>
     </div>
-  </div>
 
-  <% if @organizations.any? %>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <% @organizations.each do |organization| %>
-        <% membership = current_user.memberships.find_by(organization: organization) %>
-        <div class="bg-white rounded-lg shadow-md p-6 border border-gray-200 hover:shadow-lg transition-shadow duration-200">
-          <div class="flex justify-between items-start mb-4">
-            <h2 class="text-xl font-semibold text-gray-900"><%= organization.name %></h2>
-            <div class="flex flex-col items-end space-y-1">
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                <%= organization.org_type.humanize %>
-              </span>
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                <%= case membership&.role
-                    when 'admin'
-                      'bg-red-100 text-red-800'
-                    when 'moderator'
-                      'bg-yellow-100 text-yellow-800'
-                    else
-                      'bg-green-100 text-green-800'
-                    end %>">
-                <%= membership&.role&.humanize %>
-              </span>
+    <!-- System Overview Cards -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+      <!-- System 1: Organization-Based Access Control -->
+      <div class="bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+        <div class="flex items-center mb-6">
+          <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mr-4">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold text-gray-900">System 1: Organization-Based Access Control</h2>
+            <p class="text-gray-600">Controls access based on company/organization membership</p>
+          </div>
+        </div>
+
+        <div class="space-y-4 mb-6">
+          <div class="flex items-center">
+            <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            <span class="text-gray-700">Organization membership verification</span>
+          </div>
+          <div class="flex items-center">
+            <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            <span class="text-gray-700">Role-based permissions (Admin, Manager, Employee)</span>
+          </div>
+          <div class="flex items-center">
+            <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            <span class="text-gray-700">Organization-specific rules and policies</span>
+          </div>
+          <div class="flex items-center">
+            <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            <span class="text-gray-700">Analytics dashboard and reporting</span>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <!-- Removed non-functional buttons -->
+        </div>
+      </div>
+
+      <!-- System 2: Age-Based Participation Rules -->
+      <div class="bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+        <div class="flex items-center mb-6">
+          <div class="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mr-4">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold text-gray-900">System 2: Age-Based Participation Rules</h2>
+            <p class="text-gray-600">Controls access based on user age with minor safeguards</p>
+          </div>
+        </div>
+
+        <div class="space-y-4 mb-6">
+          <div class="flex items-center">
+            <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            <span class="text-gray-700">Age verification and validation</span>
+          </div>
+          <div class="flex items-center">
+            <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            <span class="text-gray-700">Age-group specific access areas</span>
+          </div>
+          <div class="flex items-center">
+            <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            <span class="text-gray-700">Content filtering by age</span>
+          </div>
+          <div class="flex items-center">
+            <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            <span class="text-gray-700">Parental consent for minors</span>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <!-- Removed non-functional buttons -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Available Organizations to Join -->
+    <% if user_signed_in? %>
+      <div id="available-organizations" class="bg-white rounded-xl shadow-lg p-8 border border-gray-200 mb-8">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold text-gray-900">Available Organizations</h2>
+          <%= link_to "Create New Organization", new_organization_path,
+                      class: "bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200" %>
+        </div>
+
+        <% available_orgs = Organization.all.reject { |org| current_user.organizations.include?(org) } %>
+        <% if available_orgs.any? %>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <% available_orgs.each do |organization| %>
+              <div class="bg-gray-50 rounded-lg p-6 border border-gray-200 hover:shadow-md transition-shadow duration-200">
+                <div class="flex justify-between items-start mb-4">
+                  <h3 class="text-lg font-semibold text-gray-900"><%= organization.name %></h3>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    <%= organization.org_type.humanize %>
+                  </span>
+                </div>
+
+                <div class="space-y-2 mb-4">
+                  <p class="text-sm text-gray-600">
+                    <strong>Members:</strong> <%= organization.active_members_count %>
+                  </p>
+                  <% if organization.min_age || organization.max_age %>
+                    <p class="text-sm text-gray-600">
+                      <strong>Age Range:</strong>
+                      <%= organization.min_age ? "#{organization.min_age}+" : "Any" %> -
+                      <%= organization.max_age ? organization.max_age : "Any" %>
+                    </p>
+                  <% end %>
+                  <% if organization.allow_minors %>
+                    <p class="text-sm text-green-600">
+                      ✓ Allows minors
+                    </p>
+                  <% else %>
+                    <p class="text-sm text-red-600">
+                      ✗ Adults only
+                    </p>
+                  <% end %>
+                </div>
+
+                <div class="flex space-x-2">
+                  <%= link_to "View Details", organization_path(organization),
+                              class: "bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium py-2 px-3 rounded transition-colors duration-200" %>
+
+                  <% if organization.can_user_join?(current_user) %>
+                    <% if organization.membership_requests.exists?(user: current_user, status: "pending") %>
+                      <span class="bg-yellow-100 text-yellow-800 text-sm font-medium py-2 px-3 rounded">
+                        Request Pending
+                      </span>
+                    <% else %>
+                      <%= button_to "Request to Join", organization_membership_requests_path(organization),
+                                    method: :post,
+                                    class: "bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-2 px-3 rounded transition-colors duration-200" %>
+                    <% end %>
+                  <% else %>
+                    <span class="bg-red-100 text-red-800 text-sm font-medium py-2 px-3 rounded">
+                      Age Restricted
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-8">
+            <div class="text-gray-400 mb-4">
+              <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+              </svg>
             </div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">No Available Organizations</h3>
+            <p class="text-gray-600 mb-6">
+              All organizations are either full or have age restrictions that don't match your profile.
+            </p>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Current User Organizations -->
+      <div id="organizations" class="bg-white rounded-xl shadow-lg p-8 border border-gray-200 mb-8">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold text-gray-900">Your Organizations</h2>
+        </div>
+
+        <% if @organizations&.any? %>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <% @organizations.each do |organization| %>
+              <% membership = current_user.memberships.find_by(organization: organization) %>
+              <div class="bg-gray-50 rounded-lg p-6 border border-gray-200 hover:shadow-md transition-shadow duration-200">
+                <div class="flex justify-between items-start mb-4">
+                  <h3 class="text-lg font-semibold text-gray-900"><%= organization.name %></h3>
+                  <div class="flex flex-col items-end space-y-1">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      <%= organization.org_type.humanize %>
+                    </span>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                      <%= case membership&.role
+                          when 'admin'
+                            'bg-red-100 text-red-800'
+                          when 'moderator'
+                            'bg-yellow-100 text-yellow-800'
+                          else
+                            'bg-green-100 text-green-800'
+                          end %>">
+                      <%= membership&.role&.humanize %>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="space-y-2 mb-4">
+                  <p class="text-sm text-gray-600">
+                    <strong>Members:</strong> <%= organization.active_members_count %>
+                  </p>
+                  <p class="text-sm text-gray-600">
+                    <strong>Joined:</strong> <%= membership&.created_at&.strftime("%B %d, %Y") %>
+                  </p>
+                </div>
+
+                <div class="flex space-x-2">
+                  <%= link_to "View Details", organization_path(organization),
+                              class: "bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium py-2 px-3 rounded transition-colors duration-200" %>
+
+                  <% if membership&.role == 'admin' %>
+                    <%= link_to "Analytics", analytics_organization_path(organization),
+                                class: "bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-2 px-3 rounded transition-colors duration-200" %>
+                    <%= link_to "Manage Members", members_organization_path(organization),
+                                class: "bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium py-2 px-3 rounded transition-colors duration-200" %>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% elsif user_signed_in? %>
+          <div class="text-center py-8">
+            <div class="text-gray-400 mb-4">
+              <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+              </svg>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">No Organizations Yet</h3>
+            <p class="text-gray-600 mb-6">
+              Get started by creating your first organization to demonstrate System 1.
+            </p>
+            <%= link_to "Create Your First Organization", new_organization_path,
+                        class: "bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200" %>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Age-Based System Demo -->
+      <div id="age-verification" class="bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Age-Based System Demo</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <div class="bg-blue-50 rounded-lg p-6 border border-blue-200">
+            <h3 class="text-lg font-semibold text-blue-900 mb-2">Your Age Group</h3>
+            <p class="text-3xl font-bold text-blue-600 mb-2"><%= current_user.age_group.to_s.humanize %></p>
+            <p class="text-sm text-blue-700">Age: <%= current_user.age %> years old</p>
           </div>
 
-          <div class="space-y-2 mb-4">
-            <p class="text-sm text-gray-600">
-              <strong>Members:</strong> <%= organization.active_members_count %>
+          <div class="bg-green-50 rounded-lg p-6 border border-green-200">
+            <h3 class="text-lg font-semibold text-green-900 mb-2">Access Level</h3>
+            <p class="text-3xl font-bold text-green-600 mb-2">
+              <%= current_user.minor? ? 'Restricted' : 'Full' %>
             </p>
-            <p class="text-sm text-gray-600">
-              <strong>Joined:</strong> <%= membership&.created_at&.strftime("%B %d, %Y") %>
+            <p class="text-sm text-green-700">
+              <%= current_user.minor? ? 'Parental consent may be required' : 'No restrictions' %>
             </p>
-            <% if organization.min_age || organization.max_age %>
-              <p class="text-sm text-gray-600">
-                <strong>Age Range:</strong>
-                <%= organization.min_age || 'Any' %> - <%= organization.max_age || 'Any' %>
-              </p>
-            <% end %>
-            <% if organization.allow_minors %>
-              <p class="text-sm text-green-600">
-                <strong>✓ Allows minors</strong>
-              </p>
-            <% end %>
           </div>
 
-          <div class="flex space-x-2">
-            <%= link_to "View Details", organization_path(organization),
-                        class: "bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium py-2 px-3 rounded transition-colors duration-200" %>
-
-            <% if membership&.role == 'admin' %>
-              <%= link_to "Analytics", analytics_organization_path(organization),
-                          class: "bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-2 px-3 rounded transition-colors duration-200" %>
-              <%= link_to "Manage Members", members_organization_path(organization),
-                          class: "bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium py-2 px-3 rounded transition-colors duration-200" %>
+          <div class="bg-purple-50 rounded-lg p-6 border border-purple-200">
+            <h3 class="text-lg font-semibold text-purple-900 mb-2">Consent Status</h3>
+            <% if current_user.requires_parental_consent? %>
+              <% if current_user.has_valid_parental_consent? %>
+                <p class="text-3xl font-bold text-green-600 mb-2">Granted</p>
+                <p class="text-sm text-green-700">Parental consent approved</p>
+              <% else %>
+                <p class="text-3xl font-bold text-red-600 mb-2">Required</p>
+                <p class="text-sm text-red-700">Consent needed to participate</p>
+              <% end %>
+            <% else %>
+              <p class="text-3xl font-bold text-gray-600 mb-2">Not Required</p>
+              <p class="text-sm text-gray-700">Age 18 or older</p>
             <% end %>
           </div>
         </div>
-      <% end %>
-    </div>
-  <% else %>
-    <div class="text-center py-12">
-      <div class="text-gray-400 mb-4">
-        <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-        </svg>
+
+        <% if current_user.requires_parental_consent? && !current_user.has_valid_parental_consent? %>
+          <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <div class="flex items-center">
+              <svg class="w-5 h-5 text-yellow-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+              </svg>
+              <div>
+                <h3 class="text-sm font-medium text-yellow-800">Parental Consent Required</h3>
+                <p class="text-sm text-yellow-700 mt-1">
+                  Since you are under 13, you need parental consent to participate.
+                  <%= link_to "Request consent now", new_parental_consent_path, class: "underline font-medium" %>
+                </p>
+              </div>
+            </div>
+          </div>
+        <% end %>
       </div>
-      <h3 class="text-lg font-medium text-gray-900 mb-2">No Organizations Yet</h3>
-      <p class="text-gray-600 mb-6">
-        You haven't been invited to any organizations yet, or you haven't created your own.
-      </p>
-      <div class="flex justify-center space-x-4">
-        <%= link_to "Create Your Organization", new_organization_path,
-                    class: "bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors duration-200" %>
-        <button class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-colors duration-200">
-          Join Organization
-        </button>
+    <% else %>
+      <!-- Sign Up/In for Demo -->
+      <div class="bg-white rounded-xl shadow-lg p-8 border border-gray-200 text-center">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">Ready to Demo?</h2>
+        <p class="text-gray-600 mb-6">
+          Sign up or sign in to explore both access control systems
+        </p>
+        <div class="flex justify-center space-x-4">
+          <%= link_to "Sign Up", new_user_registration_path,
+                      class: "bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200" %>
+          <%= link_to "Sign In", new_user_session_path,
+                      class: "bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200" %>
+        </div>
       </div>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 </div>

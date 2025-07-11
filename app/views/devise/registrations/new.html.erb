@@ -51,14 +51,27 @@
               class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" %>
         </div>
 
-        <fieldset class="mt-6 p-4 border border-gray-200 rounded-lg shadow-sm bg-white">
-          <legend class="text-lg font-semibold mb-4 text-gray-800">Organization Details</legend>
+        <!-- Organization Toggle Checkbox -->
+        <div>
+          <label class="inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="toggle-org-fields" class="form-checkbox h-5 w-5 text-blue-600 transition duration-150 ease-in-out">
+            <span class="ml-2 text-sm text-gray-700 font-medium">Create an organization after signup?</span>
+          </label>
+        </div>
+
+        <!-- Organization Fields (hidden by default) -->
+        <fieldset id="org-fields" class="mt-6 p-4 border border-gray-200 rounded-lg shadow-sm bg-white hidden">
+          <legend class="text-lg font-semibold mb-4 text-gray-800">Create Organization (Optional)</legend>
+          <p class="text-sm text-gray-600 mb-4">
+            You can create your own organization now, or join existing organizations after registration.
+          </p>
 
           <%= f.fields_for :organization do |org_f| %>
             <div class="grid grid-cols-1 gap-4">
               <div>
                 <%= org_f.label :name, class: "block text-sm font-medium text-gray-700 mb-1" %>
-                <%= org_f.text_field :name, required: true,
+                <%= org_f.text_field :name,
+                    placeholder: "My Organization",
                     class: "block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" %>
               </div>
 
@@ -105,3 +118,22 @@
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var toggle = document.getElementById("toggle-org-fields");
+    var orgFields = document.getElementById("org-fields");
+    if (toggle && orgFields) {
+      toggle.addEventListener("change", function() {
+        if (toggle.checked) {
+          orgFields.classList.remove("hidden");
+        } else {
+          orgFields.classList.add("hidden");
+          // Optionally clear the fields
+          var inputs = orgFields.querySelectorAll("input, select");
+          inputs.forEach(function(input) { input.value = ""; });
+        }
+      });
+    }
+  });
+</script>

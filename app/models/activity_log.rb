@@ -25,6 +25,9 @@ class ActivityLog < ApplicationRecord
     rule_created
     rule_updated
     rule_deleted
+    organization_updated
+    organization_created
+    organization_deleted
   ].freeze
 
   validates :action, inclusion: { in: ACTIONS }

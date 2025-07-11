@@ -29,11 +29,50 @@ class ParticipationService
   def get_accessible_content(content_type = nil)
     return [] unless @user.memberships.exists?(organization: @organization)
 
-    if @user.minor?
-      # Filter content based on age appropriateness
+    # Check content_access rules first
+    unless can_perform_action?('content_access')
+      return []
+    end
+
+    # Demo content - in a real app, this would come from a database
+    demo_content = {
+      child: [
+        { id: 1, title: "Educational Games", type: "educational", age_rating: "all_ages" },
+        { id: 2, title: "Safety Guidelines", type: "guidelines", age_rating: "all_ages" },
+        { id: 3, title: "Parent-Approved Activities", type: "activities", age_rating: "child_safe" }
+      ],
+      teen: [
+        { id: 4, title: "Study Resources", type: "educational", age_rating: "teen" },
+        { id: 5, title: "Community Guidelines", type: "guidelines", age_rating: "teen" },
+        { id: 6, title: "Youth Programs", type: "programs", age_rating: "teen" },
+        { id: 7, title: "Leadership Opportunities", type: "opportunities", age_rating: "teen" }
+      ],
+      adult: [
+        { id: 8, title: "General Content", type: "general", age_rating: "adult" },
+        { id: 9, title: "Advanced Features", type: "advanced", age_rating: "adult" },
+        { id: 10, title: "Administrative Tools", type: "admin", age_rating: "admin_only" },
+        { id: 11, title: "Analytics Dashboard", type: "analytics", age_rating: "admin_only" }
+      ]
+    }
+
+    case @user.age_group
+    when :child
+      # Children get child-safe content only
+      demo_content[:child]
+    when :teen
+      # Teens get teen content + child content
+      demo_content[:child] + demo_content[:teen]
+    when :adult, :senior
+      # Adults get all content based on their role
+      membership = @user.memberships.find_by(organization: @organization)
+      if membership&.role == "admin"
+        demo_content[:child] + demo_content[:teen] + demo_content[:adult]
+      else
+        demo_content[:child] + demo_content[:teen] + demo_content[:adult].reject { |c| c[:age_rating] == "admin_only" }
+      end
+    else
       []
     end
-    # Return all content for adults
   end
 
   def log_activity(action, metadata = {})

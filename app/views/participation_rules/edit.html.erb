@@ -43,13 +43,13 @@
 
         <div>
           <%= form.label :conditions, "Conditions (JSON)", class: "block text-sm font-medium text-gray-700" %>
-          <%= form.text_area :conditions, value: @rule.conditions.to_json, rows: 2, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 font-mono" %>
+          <%= form.text_area :conditions, value: (JSON.parse(@rule.conditions) rescue nil), rows: 2, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 font-mono" %>
           <p class="mt-1 text-xs text-gray-500">Example: {"allowed_roles":["admin","moderator"],"minimum_age":13}</p>
         </div>
 
         <div>
           <%= form.label :actions, "Actions (JSON)", class: "block text-sm font-medium text-gray-700" %>
-          <%= form.text_area :actions, value: @rule.actions.to_json, rows: 2, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 font-mono" %>
+          <%= form.text_area :actions, value: (JSON.parse(@rule.actions) rescue nil), rows: 2, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 font-mono" %>
           <p class="mt-1 text-xs text-gray-500">Optional. Example: {"notify_admin":true}</p>
         </div>
 

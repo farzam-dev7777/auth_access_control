@@ -78,9 +78,7 @@ class ParticipationRulesController < ApplicationController
 
   def rule_params
     params.require(:participation_rule).permit(
-      :rule_type, :description, :active, :priority,
-      conditions: [ :allowed_roles, :minimum_age, :maximum_age, :required_consent ],
-      actions: {}
+      :rule_type, :description, :active, :priority, :conditions, :actions
     )
   end
 end

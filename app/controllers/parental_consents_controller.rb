@@ -100,8 +100,7 @@ class ParentalConsentsController < ApplicationController
     organization_for_log = user_signed_in? ? current_user.organizations.first : nil
     ActivityLog.log_activity(user_for_log, organization_for_log, "consent_granted", {
       parent_email: @consent.parent_email,
-      child_user_id: @consent.user.id,
-      membership_approved: organization_granted
+      child_user_id: @consent.user.id
     })
 
     redirect_to parental_consent_path(@consent), notice: "Consent granted successfully. The user can now participate."

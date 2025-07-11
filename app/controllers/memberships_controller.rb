@@ -15,7 +15,8 @@ class MembershipsController < ApplicationController
         password: password,
         password_confirmation: password,
         first_name: params[:first_name].presence || "Invited",
-        last_name: params[:last_name].presence || "User"
+        last_name: params[:last_name].presence || "User",
+        date_of_birth: params[:date_of_birth].presence || 13.years.ago
       )
       user.save!
       new_user = true

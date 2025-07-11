@@ -2,7 +2,7 @@ class ParticipationRulesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_organization
   before_action :ensure_admin_access
-  before_action :set_rule, only: [:show, :edit, :update, :destroy]
+  before_action :set_rule, only: [ :show, :edit, :update, :destroy ]
 
   def index
     @rules = @organization.participation_rules.active.by_priority
@@ -19,8 +19,8 @@ class ParticipationRulesController < ApplicationController
     @rule = @organization.participation_rules.build(rule_params)
 
     if @rule.save
-      ActivityLog.log_activity(current_user, @organization, 'rule_created', { rule_type: @rule.rule_type })
-      redirect_to organization_participation_rules_path(@organization), notice: 'Rule created successfully.'
+      ActivityLog.log_activity(current_user, @organization, "rule_created", { rule_type: @rule.rule_type })
+      redirect_to organization_participation_rules_path(@organization), notice: "Rule created successfully."
     else
       render :new, status: :unprocessable_entity
     end
@@ -31,8 +31,8 @@ class ParticipationRulesController < ApplicationController
 
   def update
     if @rule.update(rule_params)
-      ActivityLog.log_activity(current_user, @organization, 'rule_updated', { rule_type: @rule.rule_type })
-      redirect_to organization_participation_rules_path(@organization), notice: 'Rule updated successfully.'
+      ActivityLog.log_activity(current_user, @organization, "rule_updated", { rule_type: @rule.rule_type })
+      redirect_to organization_participation_rules_path(@organization), notice: "Rule updated successfully."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -41,9 +41,9 @@ class ParticipationRulesController < ApplicationController
   def destroy
     rule_type = @rule.rule_type
     @rule.destroy
-    ActivityLog.log_activity(current_user, @organization, 'rule_deleted', { rule_type: rule_type })
+    ActivityLog.log_activity(current_user, @organization, "rule_deleted", { rule_type: rule_type })
 
-    redirect_to organization_participation_rules_path(@organization), notice: 'Rule deleted successfully.'
+    redirect_to organization_participation_rules_path(@organization), notice: "Rule deleted successfully."
   end
 
   def test
@@ -71,15 +71,15 @@ class ParticipationRulesController < ApplicationController
 
   def ensure_admin_access
     membership = current_user.memberships.find_by(organization: @organization)
-    unless membership&.role == 'admin'
-      redirect_to @organization, alert: 'You do not have permission to manage rules.'
+    unless membership&.role == "admin"
+      redirect_to @organization, alert: "You do not have permission to manage rules."
     end
   end
 
   def rule_params
     params.require(:participation_rule).permit(
       :rule_type, :description, :active, :priority,
-      conditions: [:allowed_roles, :minimum_age, :maximum_age, :required_consent],
+      conditions: [ :allowed_roles, :minimum_age, :maximum_age, :required_consent ],
       actions: {}
     )
   end

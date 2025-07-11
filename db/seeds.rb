@@ -144,7 +144,7 @@ organizations.each do |org|
   ParticipationRule.create!(
     organization: org,
     rule_type: "role_assignment",
-    conditions: { allowed_roles: ["admin", "moderator"] },
+    conditions: { allowed_roles: [ "admin", "moderator" ] },
     actions: { can_manage_members: true, can_view_analytics: true },
     active: true,
     priority: 2,
@@ -171,7 +171,7 @@ organizations.each do |org|
     user: org.memberships.first.user,
     organization: org,
     action: "rule_updated",
-    metadata: { updated_fields: ["settings"] },
+    metadata: { updated_fields: [ "settings" ] },
     performed_at: 2.days.ago
   )
 

@@ -27,7 +27,7 @@ RSpec.describe ParticipationRule, type: :model do
 
       it 'orders rules by priority descending' do
         rules = ParticipationRule.by_priority.limit(2)
-        expect(rules.pluck(:priority)).to eq([10, 1])
+        expect(rules.pluck(:priority)).to eq([ 10, 1 ])
       end
     end
   end
@@ -62,7 +62,7 @@ RSpec.describe ParticipationRule, type: :model do
       describe 'event_creation rule' do
         context 'when user is a member with allowed role' do
           let!(:membership) { create(:membership, :admin, user: user, organization: organization) }
-          let(:rule) { create(:participation_rule, :event_creation, organization: organization, conditions: { 'allowed_roles' => ['admin'] }) }
+          let(:rule) { create(:participation_rule, :event_creation, organization: organization, conditions: { 'allowed_roles' => [ 'admin' ] }) }
 
           it 'returns true' do
             expect(rule.evaluate(user)).to be true
@@ -87,7 +87,7 @@ RSpec.describe ParticipationRule, type: :model do
       describe 'content_posting rule' do
         context 'when user is a member with allowed role' do
           let!(:membership) { create(:membership, :admin, user: user, organization: organization) }
-          let(:rule) { create(:participation_rule, :content_posting, organization: organization, conditions: { 'allowed_roles' => ['admin'] }) }
+          let(:rule) { create(:participation_rule, :content_posting, organization: organization, conditions: { 'allowed_roles' => [ 'admin' ] }) }
 
           it 'returns true' do
             expect(rule.evaluate(user)).to be true
@@ -234,8 +234,8 @@ RSpec.describe ParticipationRule, type: :model do
 
     describe '#allowed_roles' do
       it 'returns allowed roles from conditions' do
-        rule.conditions = { 'allowed_roles' => ['admin', 'moderator'] }
-        expect(rule.allowed_roles).to eq(['admin', 'moderator'])
+        rule.conditions = { 'allowed_roles' => [ 'admin', 'moderator' ] }
+        expect(rule.allowed_roles).to eq([ 'admin', 'moderator' ])
       end
 
       it 'returns empty array when not set' do

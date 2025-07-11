@@ -14,8 +14,8 @@ class User < ApplicationRecord
   validate :minimum_age_requirement
   validate :maximum_age_reasonable
 
-  scope :adults, -> { where('date_of_birth <= ?', 18.years.ago) }
-  scope :minors, -> { where('date_of_birth > ?', 18.years.ago) }
+  scope :adults, -> { where("date_of_birth <= ?", 18.years.ago) }
+  scope :minors, -> { where("date_of_birth > ?", 18.years.ago) }
 
   # Virtual attribute to skip personal organization creation
   attr_accessor :skip_personal_organization
@@ -96,6 +96,4 @@ class User < ApplicationRecord
       errors.add(:date_of_birth, "Please enter a valid date of birth.")
     end
   end
-
-
 end

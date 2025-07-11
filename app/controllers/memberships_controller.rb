@@ -1,7 +1,7 @@
 class MembershipsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_organization
-  before_action :set_membership, only: [:update, :destroy]
+  before_action :set_membership, only: [ :update, :destroy ]
   before_action :ensure_admin_access
 
   def create
@@ -14,8 +14,8 @@ class MembershipsController < ApplicationController
         email: params[:email],
         password: password,
         password_confirmation: password,
-        first_name: params[:first_name].presence || 'Invited',
-        last_name: params[:last_name].presence || 'User',
+        first_name: params[:first_name].presence || "Invited",
+        last_name: params[:last_name].presence || "User",
         skip_personal_organization: true # Skip creating personal organization for invited users
       )
       user.save!
@@ -39,7 +39,7 @@ class MembershipsController < ApplicationController
 
   def update
     if @membership.update(membership_params)
-      ActivityLog.log_activity(current_user, @organization, 'role_changed', {
+      ActivityLog.log_activity(current_user, @organization, "role_changed", {
         user_id: @membership.user_id,
         new_role: @membership.role,
         previous_role: @membership.role_previously_was
@@ -53,7 +53,7 @@ class MembershipsController < ApplicationController
   def destroy
     user_name = @membership.user.full_name
     @membership.destroy
-    ActivityLog.log_activity(current_user, @organization, 'member_removed', {
+    ActivityLog.log_activity(current_user, @organization, "member_removed", {
       user_id: @membership.user_id,
       user_name: user_name
     })
@@ -72,8 +72,8 @@ class MembershipsController < ApplicationController
 
   def ensure_admin_access
     membership = current_user.memberships.find_by(organization: @organization)
-    unless membership&.role == 'admin'
-      redirect_to @organization, alert: 'You do not have permission to manage members.'
+    unless membership&.role == "admin"
+      redirect_to @organization, alert: "You do not have permission to manage members."
     end
   end
 

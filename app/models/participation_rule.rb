@@ -22,17 +22,17 @@ class ParticipationRule < ApplicationRecord
     return false unless active?
 
     case rule_type
-    when 'event_creation'
+    when "event_creation"
       evaluate_event_creation(user, context)
-    when 'content_posting'
+    when "content_posting"
       evaluate_content_posting(user, context)
-    when 'member_invitation'
+    when "member_invitation"
       evaluate_member_invitation(user, context)
-    when 'role_assignment'
+    when "role_assignment"
       evaluate_role_assignment(user, context)
-    when 'content_access'
+    when "content_access"
       evaluate_content_access(user, context)
-    when 'age_restriction'
+    when "age_restriction"
       evaluate_age_restriction(user, context)
     else
       false
@@ -40,19 +40,19 @@ class ParticipationRule < ApplicationRecord
   end
 
   def allowed_roles
-    conditions['allowed_roles'] || []
+    conditions["allowed_roles"] || []
   end
 
   def minimum_age
-    conditions['minimum_age']
+    conditions["minimum_age"]
   end
 
   def maximum_age
-    conditions['maximum_age']
+    conditions["maximum_age"]
   end
 
   def required_consent
-    conditions['required_consent'] || false
+    conditions["required_consent"] || false
   end
 
   private
@@ -77,14 +77,14 @@ class ParticipationRule < ApplicationRecord
 
   def evaluate_member_invitation(user, context)
     membership = user.memberships.find_by(organization: organization)
-    return false unless membership&.role == 'admin'
+    return false unless membership&.role == "admin"
 
     true
   end
 
   def evaluate_role_assignment(user, context)
     membership = user.memberships.find_by(organization: organization)
-    return false unless membership&.role == 'admin'
+    return false unless membership&.role == "admin"
 
     true
   end

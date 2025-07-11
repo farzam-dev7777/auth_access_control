@@ -9,8 +9,8 @@ class ParentalConsent < ApplicationRecord
   before_validation :generate_consent_token, on: :create
   before_validation :set_expiration, on: :create
 
-  scope :pending, -> { where(consented: false).where('expires_at > ?', Time.current) }
-  scope :expired, -> { where('expires_at <= ?', Time.current) }
+  scope :pending, -> { where(consented: false).where("expires_at > ?", Time.current) }
+  scope :expired, -> { where("expires_at <= ?", Time.current) }
   scope :valid_consents, -> { where(consented: true) }
 
   def consented?

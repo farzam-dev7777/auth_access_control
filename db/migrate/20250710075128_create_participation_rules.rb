@@ -12,7 +12,7 @@ class CreateParticipationRules < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :participation_rules, [:organization_id, :rule_type]
-    add_index :participation_rules, [:organization_id, :active]
+    add_index :participation_rules, [ :organization_id, :rule_type ]
+    add_index :participation_rules, [ :organization_id, :active ]
   end
 end

@@ -33,7 +33,7 @@ RSpec.describe ParticipationService, type: :service do
       end
 
       context 'when rules exist for the action' do
-        let!(:rule) { create(:participation_rule, :event_creation, organization: organization, conditions: { 'allowed_roles' => ['admin'] }) }
+        let!(:rule) { create(:participation_rule, :event_creation, organization: organization, conditions: { 'allowed_roles' => [ 'admin' ] }) }
 
         context 'when rule allows the action' do
           it 'returns true' do
@@ -42,7 +42,7 @@ RSpec.describe ParticipationService, type: :service do
         end
 
         context 'when rule denies the action' do
-          let!(:rule) { create(:participation_rule, :event_creation, organization: organization, conditions: { 'allowed_roles' => ['moderator'] }) }
+          let!(:rule) { create(:participation_rule, :event_creation, organization: organization, conditions: { 'allowed_roles' => [ 'moderator' ] }) }
 
           it 'returns false' do
             expect(service.can_perform_action?('event_creation')).to be false
@@ -50,10 +50,10 @@ RSpec.describe ParticipationService, type: :service do
         end
 
         context 'when multiple rules exist' do
-          let!(:rule2) { create(:participation_rule, :event_creation, organization: organization, priority: 2, conditions: { 'allowed_roles' => ['admin'] }) }
+          let!(:rule2) { create(:participation_rule, :event_creation, organization: organization, priority: 2, conditions: { 'allowed_roles' => [ 'admin' ] }) }
 
           context 'when first rule allows but second denies' do
-            let!(:rule) { create(:participation_rule, :event_creation, organization: organization, conditions: { 'allowed_roles' => ['moderator'] }) }
+            let!(:rule) { create(:participation_rule, :event_creation, organization: organization, conditions: { 'allowed_roles' => [ 'moderator' ] }) }
 
             it 'returns false (denied by higher priority rule)' do
               expect(service.can_perform_action?('event_creation')).to be false
@@ -61,7 +61,7 @@ RSpec.describe ParticipationService, type: :service do
           end
 
           context 'when both rules allow' do
-            let!(:rule) { create(:participation_rule, :event_creation, organization: organization, conditions: { 'allowed_roles' => ['admin'] }) }
+            let!(:rule) { create(:participation_rule, :event_creation, organization: organization, conditions: { 'allowed_roles' => [ 'admin' ] }) }
 
             it 'returns true' do
               expect(service.can_perform_action?('event_creation')).to be true

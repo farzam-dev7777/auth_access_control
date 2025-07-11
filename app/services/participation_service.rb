@@ -23,7 +23,7 @@ class ParticipationService
     return true unless @user.minor?
     return false if @organization.min_age && @user.age < @organization.min_age
     return false if @organization.max_age && @user.age > @organization.max_age
-    return false unless @organization.allow_minors
+    false unless @organization.allow_minors
   end
 
   def get_accessible_content(content_type = nil)
@@ -31,7 +31,7 @@ class ParticipationService
 
     if @user.minor?
       # Filter content based on age appropriateness
-      return []
+      []
     end
     # Return all content for adults
   end
@@ -42,8 +42,8 @@ class ParticipationService
       @organization,
       action,
       metadata.merge(
-        ip_address: metadata[:ip_address] || 'unknown',
-        user_agent: metadata[:user_agent] || 'unknown'
+        ip_address: metadata[:ip_address] || "unknown",
+        user_agent: metadata[:user_agent] || "unknown"
       )
     )
   end
@@ -61,7 +61,7 @@ class ParticipationService
 
   def get_membership_status
     membership = @user.memberships.find_by(organization: @organization)
-    return 'not_member' unless membership
+    return "not_member" unless membership
 
     {
       role: membership.role,
@@ -71,14 +71,14 @@ class ParticipationService
   end
 
   def get_consent_status
-    return 'not_required' unless @user.requires_parental_consent?
+    return "not_required" unless @user.requires_parental_consent?
 
     if @user.has_valid_parental_consent?
-      'granted'
+      "granted"
     elsif @user.parental_consent&.expired?
-      'expired'
+      "expired"
     else
-      'pending'
+      "pending"
     end
   end
 end

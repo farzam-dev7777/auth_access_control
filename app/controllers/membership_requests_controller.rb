@@ -1,8 +1,8 @@
 class MembershipRequestsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_organization, only: [:create]
-  before_action :set_membership_request, only: [:approve, :reject, :destroy]
-  before_action :ensure_admin_access, only: [:approve, :reject]
+  before_action :set_organization, only: [ :create ]
+  before_action :set_membership_request, only: [ :approve, :reject, :destroy ]
+  before_action :ensure_admin_access, only: [ :approve, :reject ]
 
   def create
     # Check if user already has a membership or pending request
@@ -28,7 +28,7 @@ class MembershipRequestsController < ApplicationController
     )
 
     if membership_request.save
-      ActivityLog.log_activity(current_user, @organization, 'membership_requested', {
+      ActivityLog.log_activity(current_user, @organization, "membership_requested", {
         user_id: current_user.id,
         message: params[:message]
       })
@@ -42,7 +42,7 @@ class MembershipRequestsController < ApplicationController
 
   def approve
     if @membership_request.approve!
-      ActivityLog.log_activity(current_user, @membership_request.organization, 'membership_approved', {
+      ActivityLog.log_activity(current_user, @membership_request.organization, "membership_approved", {
         user_id: @membership_request.user_id,
         approved_by: current_user.id
       })
@@ -56,7 +56,7 @@ class MembershipRequestsController < ApplicationController
 
   def reject
     if @membership_request.reject!
-      ActivityLog.log_activity(current_user, @membership_request.organization, 'membership_rejected', {
+      ActivityLog.log_activity(current_user, @membership_request.organization, "membership_rejected", {
         user_id: @membership_request.user_id,
         rejected_by: current_user.id
       })
@@ -91,8 +91,8 @@ class MembershipRequestsController < ApplicationController
 
   def ensure_admin_access
     membership = current_user.memberships.find_by(organization: @membership_request.organization)
-    unless membership&.role == 'admin'
-      redirect_to @membership_request.organization, alert: 'You do not have permission to manage membership requests.'
+    unless membership&.role == "admin"
+      redirect_to @membership_request.organization, alert: "You do not have permission to manage membership requests."
     end
   end
 end

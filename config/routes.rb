@@ -11,24 +11,24 @@ Rails.application.routes.draw do
       get :generate_report
     end
 
-    resources :participation_rules, except: [:show] do
+    resources :participation_rules, except: [ :show ] do
       collection do
         get :test
       end
     end
 
-    resources :memberships, only: [:update, :destroy, :create]
-    resources :membership_requests, only: [:create]
+    resources :memberships, only: [ :update, :destroy, :create ]
+    resources :membership_requests, only: [ :create ]
   end
 
-  resources :membership_requests, only: [:destroy] do
+  resources :membership_requests, only: [ :destroy ] do
     member do
       patch :approve
       patch :reject
     end
   end
 
-    resources :parental_consents, only: [:new, :create] do
+    resources :parental_consents, only: [ :new, :create ] do
     member do
       get :show
       patch :grant
@@ -38,7 +38,7 @@ Rails.application.routes.draw do
 
 
 
-  devise_for :users, controllers: { registrations: 'users/registrations' }
+  devise_for :users, controllers: { registrations: "users/registrations" }
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

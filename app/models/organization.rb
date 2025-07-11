@@ -18,7 +18,7 @@ class Organization < ApplicationRecord
   scope :allowing_minors, -> { where("settings->>'allow_minors' = 'true'") }
 
   def admins
-    users.joins(:memberships).where(memberships: { role: 'admin' })
+    users.joins(:memberships).where(memberships: { role: "admin" })
   end
 
   def can_user_join?(user)
@@ -33,18 +33,18 @@ class Organization < ApplicationRecord
   end
 
   def min_age
-    settings&.[]('min_age')&.to_i
+    settings&.[]("min_age")&.to_i
   end
 
   def max_age
-    settings&.[]('max_age')&.to_i
+    settings&.[]("max_age")&.to_i
   end
 
   def allow_minors
-    settings&.[]('allow_minors') == true || settings&.[]('allow_minors') == "true"
+    settings&.[]("allow_minors") == true || settings&.[]("allow_minors") == "true"
   end
 
   def requires_parental_consent
-    settings&.[]('requires_parental_consent') == true || settings&.[]('requires_parental_consent') == "true"
+    settings&.[]("requires_parental_consent") == true || settings&.[]("requires_parental_consent") == "true"
   end
 end

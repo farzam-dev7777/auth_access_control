@@ -1,6 +1,6 @@
 class ParentalConsentsController < ApplicationController
-  before_action :set_consent, only: [:show, :grant, :deny]
-  skip_before_action :authenticate_user!, only: [:show, :grant, :deny]
+  before_action :set_consent, only: [ :show, :grant, :deny ]
+  skip_before_action :authenticate_user!, only: [ :show, :grant, :deny ]
 
   def new
     @user = current_user
@@ -12,9 +12,9 @@ class ParentalConsentsController < ApplicationController
     @consent = @user.build_parental_consent(consent_params)
 
     if @consent.save
-      ActivityLog.log_activity(@user, @user.organizations.first, 'consent_requested', { parent_email: @consent.parent_email })
+      ActivityLog.log_activity(@user, @user.organizations.first, "consent_requested", { parent_email: @consent.parent_email })
 
-      redirect_to root_path, notice: 'Parental consent request created. Consent token: ' + @consent.consent_token
+      redirect_to root_path, notice: "Parental consent request created. Consent token: " + @consent.consent_token
     else
       render :new, status: :unprocessable_entity
     end
@@ -30,26 +30,26 @@ class ParentalConsentsController < ApplicationController
 
   def grant
     if @consent.expired?
-      redirect_to parental_consent_path(@consent), alert: 'This consent request has expired.'
+      redirect_to parental_consent_path(@consent), alert: "This consent request has expired."
       return
     end
 
     @consent.grant_consent!
-    ActivityLog.log_activity(@consent.user, @consent.user.organizations.first, 'consent_granted')
+    ActivityLog.log_activity(@consent.user, @consent.user.organizations.first, "consent_granted")
 
-    redirect_to parental_consent_path(@consent), notice: 'Consent granted successfully. The user can now participate.'
+    redirect_to parental_consent_path(@consent), notice: "Consent granted successfully. The user can now participate."
   end
 
   def deny
     if @consent.expired?
-      redirect_to parental_consent_path(@consent), alert: 'This consent request has expired.'
+      redirect_to parental_consent_path(@consent), alert: "This consent request has expired."
       return
     end
 
     @consent.update!(consented: false, notes: params[:notes])
-    ActivityLog.log_activity(@consent.user, @consent.user.organizations.first, 'consent_denied', { notes: params[:notes] })
+    ActivityLog.log_activity(@consent.user, @consent.user.organizations.first, "consent_denied", { notes: params[:notes] })
 
-    redirect_to parental_consent_path(@consent), notice: 'Consent denied. The user will be notified.'
+    redirect_to parental_consent_path(@consent), notice: "Consent denied. The user will be notified."
   end
 
   private
@@ -57,7 +57,7 @@ class ParentalConsentsController < ApplicationController
   def set_consent
     @consent = ParentalConsent.find_by_token(params[:id])
     unless @consent
-      redirect_to root_path, alert: 'Invalid consent request.'
+      redirect_to root_path, alert: "Invalid consent request."
     end
   end
 

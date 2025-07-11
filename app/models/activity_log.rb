@@ -5,7 +5,7 @@ class ActivityLog < ApplicationRecord
   validates :action, presence: true
   validates :performed_at, presence: true
 
-  scope :recent, ->(days = 30) { where('performed_at >= ?', days.days.ago) }
+  scope :recent, ->(days = 30) { where("performed_at >= ?", days.days.ago) }
   scope :by_action, ->(action) { where(action: action) }
   scope :by_date_range, ->(start_date, end_date) { where(performed_at: start_date..end_date) }
 
@@ -38,6 +38,4 @@ class ActivityLog < ApplicationRecord
       performed_at: Time.current
     )
   end
-
-
 end

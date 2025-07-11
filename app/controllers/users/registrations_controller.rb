@@ -18,7 +18,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
       # Handle parental consent for minors
       if resource.requires_parental_consent?
-        redirect_to new_parental_consent_path, notice: 'Registration successful! Parental consent is required to continue.'
+        redirect_to new_parental_consent_path, notice: "Registration successful! Parental consent is required to continue."
         return
       end
     end
@@ -39,8 +39,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def sign_up_params
     params.require(:user).permit(
       :first_name, :last_name, :email, :date_of_birth, :password, :password_confirmation,
-      organization: [:name, :org_type]
+      organization: [ :name, :org_type ]
     )
   end
-
 end

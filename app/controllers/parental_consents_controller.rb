@@ -18,12 +18,6 @@ class ParentalConsentsController < ApplicationController
       return
     end
 
-    # Check if user already has a pending consent request
-    if @user.parental_consent&.pending?
-      redirect_to root_path, notice: "You already have a pending parental consent request. Please wait for your parent or guardian to respond."
-      return
-    end
-
     @consent = ParentalConsent.new
   end
 

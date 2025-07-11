@@ -1,6 +1,6 @@
 class ActivityLog < ApplicationRecord
   belongs_to :user
-  belongs_to :organization
+  belongs_to :organization, optional: true
 
   validates :action, presence: true
   validates :performed_at, presence: true
@@ -19,7 +19,9 @@ class ActivityLog < ApplicationRecord
     event_created
     event_attended
     consent_granted
+    consent_requested
     consent_denied
+    consent_viewed
     rule_created
     rule_updated
     rule_deleted
@@ -28,9 +30,18 @@ class ActivityLog < ApplicationRecord
   validates :action, inclusion: { in: ACTIONS }
 
   def self.log_activity(user, organization, action, metadata = {})
+    # Use anonymous user if no user is provided or if user is nil
+    user_to_log = user || User.anonymous_user
+
+    # Validate organization - only use if it's a valid Organization instance
+    organization_to_log = nil
+    if organization.present? && organization.is_a?(Organization)
+      organization_to_log = organization
+    end
+
     create!(
-      user: user,
-      organization: organization,
+      user: user_to_log,
+      organization: organization_to_log,
       action: action,
       metadata: metadata,
       ip_address: metadata[:ip_address],

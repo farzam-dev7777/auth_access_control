@@ -22,6 +22,7 @@
                         class: "bg-blue-100 hover:bg-blue-200 text-blue-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200" %>
             <%= link_to "Manage Members", members_organization_path(@organization),
                         class: "bg-blue-100 hover:bg-blue-200 text-blue-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200" %>
+            <%= link_to "View Parental Consent Requests", parental_consents_path, class: "bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200" %>
           <% elsif @membership %>
             <span class="bg-blue-100 text-blue-800 font-medium py-2 px-4 rounded-lg">
               Member

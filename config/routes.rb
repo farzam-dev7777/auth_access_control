@@ -28,9 +28,8 @@ Rails.application.routes.draw do
     end
   end
 
-    resources :parental_consents, only: [ :new, :create ] do
+    resources :parental_consents, only: [ :index, :new, :create, :show ] do
     member do
-      get :show
       patch :grant
       patch :deny
     end

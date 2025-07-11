@@ -25,6 +25,10 @@ class ParentalConsent < ApplicationRecord
     consented? && !expired?
   end
 
+  def pending?
+    !consented && !expired?
+  end
+
   def grant_consent!
     update!(
       consented: true,
@@ -36,10 +40,16 @@ class ParentalConsent < ApplicationRecord
     find_by(consent_token: token)
   end
 
+  def organization
+    # Get the organization from the user's pending membership request
+    user.membership_requests.pending.first&.organization
+  end
+
   private
 
   def generate_consent_token
     self.consent_token = SecureRandom.urlsafe_base64(32)
+    self.consent_requested_at = DateTime.now
   end
 
   def set_expiration

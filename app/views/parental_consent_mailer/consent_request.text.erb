@@ -1,0 +1,28 @@
+Parental Consent Required
+
+Dear Parent or Guardian,
+
+<%= @user.full_name %> (age <%= @user.age %>) has requested to create an account on our platform and join the organization <%= @organization&.name || "an organization" %>.
+
+IMPORTANT: Since <%= @user.full_name %> is under 13 years old, we require your explicit consent before they can access the platform.
+
+To review and provide consent for your child's account, please visit this secure link:
+
+<%= @consent_url %>
+
+What happens next?
+- You'll be taken to a secure page to review the consent details
+- You can choose to grant or deny consent
+- If granted, <%= @user.full_name %> will be able to access the platform
+- If denied, the account will remain inactive
+
+Security Note: This link will expire in 7 days for security reasons. If you need a new link, please contact us.
+
+If you have any questions or concerns, please don't hesitate to reach out to our support team.
+
+Thank you,
+The <%= @organization&.name || "Platform" %> Team
+
+---
+This email was sent to <%= @parental_consent.parent_email %> in response to a consent request for <%= @user.full_name %>'s account.
+If you did not expect this email, please ignore it or contact our support team.

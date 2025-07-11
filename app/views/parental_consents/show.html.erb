@@ -34,11 +34,19 @@
 
       <h3 class="text-lg font-medium text-gray-900 mb-3">Organization Details</h3>
       <div class="bg-gray-50 rounded-md p-4">
-        <p class="text-sm text-gray-900">
-          <strong>Organization:</strong> <%= @organization.name %><br>
-          <strong>Type:</strong> <%= @organization.org_type.humanize %><br>
-          <strong>Members:</strong> <%= @organization.active_members_count %>
-        </p>
+        <% if @organization %>
+          <p class="text-sm text-gray-900">
+            <strong>Organization:</strong> <%= @organization.name %><br>
+            <strong>Type:</strong> <%= @organization.org_type.humanize %><br>
+            <strong>Members:</strong> <%= @organization.active_members_count %>
+          </p>
+        <% else %>
+          <p class="text-sm text-gray-900">
+            <strong>Organization:</strong> No organization yet<br>
+            <strong>Type:</strong> N/A<br>
+            <strong>Members:</strong> N/A
+          </p>
+        <% end %>
       </div>
     </div>
 
@@ -65,15 +73,18 @@
       <h2 class="text-xl font-semibold text-gray-900 mb-4">Your Decision</h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <%= link_to "Grant Consent", grant_parental_consent_path(@consent.consent_token),
-                    method: :patch,
-                    class: "bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-md text-center transition duration-150 ease-in-out",
-                    data: { confirm: "Are you sure you want to grant consent for your child to participate?" } %>
+        <%= button_to "Grant Consent", grant_parental_consent_path(@consent.consent_token),
+              method: :patch,
+              form_class: "w-full",
+              class: "w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-md transition duration-150 ease-in-out",
+              data: { confirm: "Are you sure you want to grant consent for your child to participate?" } %>
 
-        <%= link_to "Deny Consent", deny_parental_consent_path(@consent.consent_token),
-                    method: :patch,
-                    class: "bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-md text-center transition duration-150 ease-in-out",
-                    data: { confirm: "Are you sure you want to deny consent? Your child will not be able to participate." } %>
+        <%= button_to "Deny Consent", deny_parental_consent_path(@consent.consent_token),
+              method: :patch,
+              form_class: "w-full",
+              class: "w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-md transition duration-150 ease-in-out",
+              data: { confirm: "Are you sure you want to deny consent? Your child will not be able to participate." } %>
+
       </div>
 
       <div class="mt-6 text-center">

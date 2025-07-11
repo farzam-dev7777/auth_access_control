@@ -76,6 +76,20 @@ class User < ApplicationRecord
     )
   end
 
+  def self.anonymous_user
+    find_or_create_by(email: 'anonymous@system.local') do |user|
+      user.first_name = 'Anonymous'
+      user.last_name = 'User'
+      user.date_of_birth = 18.years.ago
+      user.password = SecureRandom.hex(32)
+      user.password_confirmation = user.password
+    end
+  end
+
+  def anonymous?
+    email == 'anonymous@system.local'
+  end
+
   private
 
   def minimum_age_requirement

@@ -7,9 +7,7 @@
     </div>
 
     <div class="bg-white py-8 px-6 shadow-lg rounded-lg">
-      <%= form_with model: resource, as: resource_name, url: registration_path(resource_name), class: "space-y-6" do |f| %>
-        <%= render "devise/shared/error_messages", resource: resource %>
-
+      <%= form_with model: resource, as: resource_name, url: registration_path(resource_name), local: true, data: { turbo: false }, class: "space-y-6" do |f| %>
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
           <div>
             <%= f.label :first_name, class: "block text-sm font-medium text-gray-700" %>
@@ -33,7 +31,7 @@
           <%= f.label :date_of_birth, class: "block text-sm font-medium text-gray-700" %>
           <%= f.date_field :date_of_birth,
               class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" %>
-          <p class="mt-1 text-sm text-gray-500">You must be at least 13 years old to register</p>
+          <p class="mt-1 text-sm text-gray-500">You must be at least 10 years old to register. Users under 13 will require parental consent.</p>
         </div>
 
         <div>
@@ -75,22 +73,3 @@
     </div>
   </div>
 </div>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    var toggle = document.getElementById("toggle-org-fields");
-    var orgFields = document.getElementById("org-fields");
-    if (toggle && orgFields) {
-      toggle.addEventListener("change", function() {
-        if (toggle.checked) {
-          orgFields.classList.remove("hidden");
-        } else {
-          orgFields.classList.add("hidden");
-          // Optionally clear the fields
-          var inputs = orgFields.querySelectorAll("input, select");
-          inputs.forEach(function(input) { input.value = ""; });
-        }
-      });
-    }
-  });
-</script>

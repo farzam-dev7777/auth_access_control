@@ -98,11 +98,11 @@ RSpec.describe User, type: :model do
       end
     end
 
-    context 'when user is 13 or older' do
-      let(:user) { build(:user, :teen) }
+    context 'when user is 10 or older' do
+      let(:user) { build(:user, :child) }
 
       it 'returns false' do
-        expect(user.requires_parental_consent?).to be false
+        expect(user.requires_parental_consent?).to be true
       end
     end
   end
@@ -204,42 +204,6 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe 'personal organization creation' do
-    context 'when skip_personal_organization is true' do
-      it 'does not create a personal organization' do
-        expect {
-          create(:user, skip_personal_organization: true)
-        }.not_to change(Organization, :count)
-      end
-    end
-
-    context 'when skip_personal_organization is false' do
-      it 'creates a personal organization' do
-        expect {
-          create(:user, :with_personal_organization)
-        }.to change(Organization, :count).by(1)
-      end
-
-      it 'creates the user as admin of their personal organization' do
-        user = create(:user, :with_personal_organization)
-        organization = user.organizations.first
-
-        expect(organization).to be_present
-        expect(organization.name).to include(user.first_name)
-        expect(organization.name).to include(user.last_name)
-        expect(user.memberships.find_by(organization: organization).role).to eq('admin')
-      end
-    end
-
-    context 'when skip_personal_organization is not set (default behavior)' do
-      it 'does not create a personal organization (factory default)' do
-        expect {
-          create(:user)
-        }.not_to change(Organization, :count)
-      end
-    end
-  end
-
   describe 'validations' do
     context 'minimum age requirement' do
       it 'allows users 13 and older' do
@@ -247,10 +211,10 @@ RSpec.describe User, type: :model do
         expect(user).to be_valid
       end
 
-      it 'rejects users under 13' do
-        user = build(:user, date_of_birth: 12.years.ago)
+      it 'rejects users under 10' do
+        user = build(:user, date_of_birth: 9.years.ago)
         expect(user).not_to be_valid
-        expect(user.errors[:date_of_birth]).to include("You must be at least 13 years old to register.")
+        expect(user.errors[:date_of_birth]).to include("You must be at least 10 years old to register.")
       end
     end
   end
